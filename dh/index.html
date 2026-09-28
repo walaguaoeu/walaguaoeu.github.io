@@ -2,954 +2,985 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>哇啦咕 - Aoeu 导航</title>
-<meta name="description" content="哇啦咕导航--我的私人专属">
-<link href="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/link.png" type="image/x-icon" rel="icon">
-<link type="text/css" rel="stylesheet" href="https://testingcf.jsdelivr.net/gh/walaguaoeu/ku@master/cssjs/daohang/wedo.css" />
-<script src="https://testingcf.jsdelivr.net/gh/walaguaoeu/ku@master/cssjs/daohang/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>起始页 · 个人导航</title>
+<link rel="icon" href="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/link.png">
 <style>
-/* https://testingcf.jsdelivr.net   https://gcore.jsdelivr.net/ */
-body{background-color:#758abf;}
-#top{position:relative;}
-#time{position:fixed;top:20px;right:20px;padding:12px 20px;background:rgba(255,255,255,.8);border-radius:25px;box-shadow:0 5px 15px rgba(0,0,0,.1);backdrop-filter:blur(8px);font-family:'Segoe UI',sans-serif;font-size:18px;font-weight:500;color:#333;letter-spacing:1px;z-index:1000;white-space:nowrap;}
-#rfloat{position:fixed;left:auto !important;right:20px !important;margin-left:0 !important;transform:none !important;bottom:30px;}
-#sakura{position:fixed;inset:0;pointer-events:none;z-index:9999;}
+/* ===== 设计变量 ===== */
+:root{
+  --paper:#758ABF;
+  --card:#F5F6F1;
+  --ink:#232A24;
+  --ink-soft:#5E685E;
+  --ink-faint:#8C958B;
+  --line:#D4D9CD;
+  --accent:#B5402B;
+  --accent-deep:#93301F;
+  --x:#000000;
+  --serif:'Songti SC', 'STSong', 'SimSun', serif;
+  --sans:-apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  min-height:100vh;
+  line-height:1.6;
+}
+/* 纸面细颗粒 */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:34px 26px 46px;}
 
-/* ===== 分类卡片：一个分类一个长条框，占满整行 ===== */
-#cats{
-  max-width:1200px;margin:0 auto;padding:10px 20px 40px;
+/* ===== 顶部：问候 + 时钟 ===== */
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;}
+.greet h1{font-family:var(--serif);font-weight:600;font-size:34px;letter-spacing:.5px;line-height:1.25;}
+.greet p{color:var(--ink);font-size:14px;margin-top:6px;}
+.clockbox{text-align:right;}
+.clockbox .time{font-family:var(--serif);font-weight:600;font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:1px;}
+.clockbox .date{color:var(--ink);font-size:13px;margin-top:2px;}
+.clockbox .lunar{color:var(--ink);font-size:12.5px;margin-top:2px;}
+
+/* ===== 搜索 ===== */
+.search{
+  display:flex;align-items:center;gap:6px;
+  background:var(--card);border:1px solid var(--ink);border-radius:14px;
+  padding:6px;margin:26px 0 30px;
+  transition:border-color .18s ease, box-shadow .18s ease;
 }
-.cat-box{
-  width:100%;box-sizing:border-box;
-  background:rgba(255,255,255,.85);
-  border-radius:6px;padding:14px 22px;margin-bottom:14px;
-  display:flex;align-items:flex-start;
+.search:focus-within{border-color:var(--ink);box-shadow:none;}
+.engines{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.engines::-webkit-scrollbar{display:none;}
+.engine{
+  border:none;background:transparent;font-family:var(--sans);cursor:pointer;
+  font-size:14px;color:var(--ink-soft);padding:9px 14px;border-radius:9px;white-space:nowrap;
+  transition:background .15s ease,color .15s ease;
 }
-.cat-box .tag{
-  flex:0 0 auto;align-self:flex-start;margin-top:2px;
-  display:inline-block;padding:4px 14px;border-radius:5px;
-  color:#fff;font-size:13px;letter-spacing:1px;margin-right:22px;
+.engine:hover{color:var(--ink);}
+.engine.active{background:var(--ink);color:#F5F6F1;font-weight:500;}
+.search input{
+  flex:1;min-width:120px;border:none;outline:none;background:transparent;
+  font-family:var(--sans);font-size:16px;color:var(--ink);padding:0 12px;
 }
-.tag-y{background:#5b8ff9;}
-.tag-b{background:#5b8ff9;}
-.tag-p{background:#b06fe8;}
-.tag-g{background:#b06fe8;}
-.cat-links{flex:1;display:flex;flex-wrap:wrap;gap:6px 26px;align-content:center;}
-.cat-links a{color:#3a3a3a;font-size:14px;text-decoration:none;line-height:1.9;transition:.15s;}
-.cat-links a:hover{color:#e86a9a;}
-@media(max-width:560px){.cat-box{flex-direction:column;}.cat-box .tag{margin:0 0 8px;}}
+.search input::placeholder{color:var(--ink-faint);}
+.search-btn{
+  border:none;cursor:pointer;background:var(--accent);color:#FDFBF7;
+  font-family:var(--sans);font-size:15px;font-weight:500;
+  padding:10px 28px;border-radius:10px;white-space:nowrap;
+  transition:background .15s ease;
+}
+.search-btn:hover{background:var(--accent-deep);}
+.weather{display:flex;justify-content:center;margin:0 0 22px;}
+.weather iframe{border:none;width:100%;max-width:680px;height:40px;display:block;}
+.iconbar{
+  display:flex;gap:10px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
+  border-radius:14px;padding:14px 16px;margin:0 0 24px;
+}
+.icon-item{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:7px;text-decoration:none;}
+.icon-item img{
+  width:48px;height:48px;border-radius:11px;object-fit:cover;
+  box-shadow:0 4px 10px -4px rgba(35,42,36,.4);
+  transition:transform .16s ease;
+}
+.icon-item:hover img{transform:translateY(-2px) scale(1.04);}
+.icon-item span{font-size:11px;color:rgba(255,255,255,.72);text-align:center;line-height:1.3;max-width:100%;}
+
+/* ===== 分类标签 ===== */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+.tab{
+  border:1px solid transparent;background:rgba(255,255,255,.12);font-family:var(--sans);cursor:pointer;
+  font-size:13.5px;color:rgba(255,255,255,.88);padding:7px 15px;border-radius:999px;
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.tab:hover{background:rgba(255,255,255,.22);color:#fff;}
+.tab.active{background:#fff;color:var(--ink);font-weight:600;border-color:#fff;box-shadow:0 3px 10px -4px rgba(35,42,36,.35);}
+.tab-expand{color:rgba(255,255,255,.9)!important;font-weight:600!important;margin-left:auto;}
+.tab-expand.active{color:#fff!important;background:rgba(181,64,43,.18);border-radius:9px;}
+.grid.expanded{display:block;}
+.cat-section{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;padding:16px 18px;margin-bottom:14px;
+}
+.cat-title{
+  font-size:12.5px;font-weight:600;color:#fff;margin-bottom:12px;
+  display:inline-flex;align-items:center;letter-spacing:1px;
+  background:#5b8ff9;padding:5px 16px;border-radius:999px;
+  box-shadow:0 3px 8px -3px rgba(91,143,249,.6);
+}
+.cat-links{display:flex;flex-wrap:wrap;gap:8px;}
+.site-sm{padding:6px 13px;font-size:12.5px;}
+
+/* ===== 网站卡片 ===== */
+.grid{display:flex;flex-wrap:wrap;gap:12px;}
+.site{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;
+  padding:11px 20px;text-decoration:none;color:var(--ink);
+  font-size:13.5px;letter-spacing:.3px;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease,color .16s ease;
+}
+.site:hover{transform:translateY(-2px);border-color:#fff;background:rgba(255,255,255,.42);color:var(--ink);box-shadow:0 8px 18px -6px rgba(35,42,36,.3);}
+
+/* ===== Toast ===== */
+.toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(16px);z-index:60;
+  background:var(--ink);color:#F5F6F1;font-size:14px;padding:10px 20px;border-radius:10px;
+  opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.footer{margin-top:34px;}
+.footer .link{
+  background:rgba(255,255,255,.88);
+  border-radius:8px;padding:18px 24px;
+}
+.footer .linktop{
+  font-size:14px;color:#3a3a3a;font-weight:500;
+  padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,.08);
+}
+.footer p{text-align:center;color:rgba(255,255,255,.72);font-size:12.5px;margin-top:10px;line-height:1.8;}
+.footer p a{color:rgba(255,255,255,.9);text-decoration:none;}
+
+/* ===== 花瓣飘落 ===== */
+.petal-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
+.petal{
+  position:absolute;top:-7vh;border-radius:150% 0 150% 0;
+  opacity:.88;animation:petalFall linear infinite;will-change:transform;
+}
+@keyframes petalFall{
+  0%{transform:translate3d(0,-7vh,0) rotate(0deg);}
+  25%{transform:translate3d(var(--drift),30vh,0) rotate(120deg);}
+  50%{transform:translate3d(calc(-1 * var(--drift)),60vh,0) rotate(240deg);}
+  75%{transform:translate3d(var(--drift),90vh,0) rotate(300deg);}
+  100%{transform:translate3d(0,110vh,0) rotate(360deg);}
+}
+
+/* ===== 响应式 ===== */
+@media (max-width:640px){
+  .wrap{padding:24px 16px 36px;}
+  .greet h1{font-size:26px;}
+  .clockbox .time{font-size:25px;}
+  .top{align-items:center;}
+  .search{flex-wrap:wrap;padding:8px;}
+  .engines{order:1;width:100%;}
+  .search input{order:2;flex:1;padding:8px 10px;}
+  .search-btn{order:3;padding:9px 18px;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;}.petal{display:none;}}
 </style>
 </head>
 <body>
-<canvas id="sakura"></canvas>
-
-<div id="bg-over"></div>
-<div id="top">
-  <div class="kuandu">
-    <div class="logo"><a href="" title="哇啦咕导航"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/walagulogo.png" alt="哇啦咕导航"></a></div>
-    <div class="search fr">
-      <form target="_blank">
-        <input type="text" id="opentext" name="word" autocomplete="off">
-        <input type="submit" class="baidu" value="百度搜索" onclick="webopen('http://www.baidu.com/baidu','word')">
-        <input type="submit" class="haosou" value="360搜索" onclick="webopen('http://www.haosou.com/s','q')">
-        <iframe width="550" height="40" src="https://i.tianqi.com/index.php?c=code&id=40&color=%23ffffff" frameborder="0"></iframe>
-      </form>
+<div class="wrap">
+  <!-- ===== 顶部 ===== -->
+  <header class="top">
+    <div class="greet">
+      <h1 id="greet">你好</h1>
+      <p id="greetSub">愿今天的浏览清晰有序</p>
     </div>
+    <div class="clockbox">
+      <div class="time" id="time">--:--:--</div>
+      <div class="date" id="date">----</div>
+      <div class="lunar" id="lunar"></div>
+    </div>
+  </header>
+
+  <!-- ===== 搜索 ===== -->
+  <form class="search" id="searchForm">
+    <div class="engines" id="engines"></div>
+    <input type="text" id="searchInput" placeholder="输入关键词，按 Enter 搜索（按 / 快速聚焦）" autocomplete="off">
+    <button type="submit" class="search-btn">搜索</button>
+  </form>
+
+  <!-- ===== 天气 ===== -->
+  <div class="weather">
+    <iframe src="https://i.tianqi.com/index.php?c=code&id=40&color=%23ffffff" frameborder="0" scrolling="no"></iframe>
   </div>
-</div>
-<div id="time"></div>
-<script>
-const timeEl=document.getElementById('time');
-function formatTime(){
-  const n=new Date(),w=['日','一','二','三','四','五','六'];
-  const p=x=>String(x).padStart(2,'0');
-  return `${n.getFullYear()}-${p(n.getMonth()+1)}-${p(n.getDate())} ${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())} 星期${w[n.getDay()]}`;
-}
-timeEl.innerText=formatTime();
-setInterval(()=>timeEl.innerText=formatTime(),1000);
-</script>
-<script>function webopen(u,g){window.open(u+'?'+g+'='+$("#opentext").val());}</script>
 
-<!-- 一排大图标 -->
-<div id="icon_list"><ul id="iconRow"></ul></div>
-<div class="clear"></div>
+  <!-- ===== 常用大图标 ===== -->
+  <div class="iconbar">
+    <a class="icon-item" href="http://www.bilibili.com/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/bili.png" alt="哔哩哔哩弹幕视频网" loading="lazy"><span>哔哩哔哩弹幕视频网</span></a>
+    <a class="icon-item" href="http://www.acfun.tv/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/acfun.jpg" alt="AcFun弹幕视频网" loading="lazy"><span>AcFun弹幕视频网</span></a>
+    <a class="icon-item" href="http://www.nicovideo.jp/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/nico.png" alt="ニコニコ動画" loading="lazy"><span>ニコニコ動画</span></a>
+    <a class="icon-item" href="http://bcy.net/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/banciyuan.png" alt="半次元" loading="lazy"><span>半次元</span></a>
+    <a class="icon-item" href="http://www.pixiv.net/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/pixiv.png" alt="pixiv" loading="lazy"><span>pixiv</span></a>
+    <a class="icon-item" href="http://moe.fm/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/mengfou.jpg" alt="萌否电台" loading="lazy"><span>萌否电台</span></a>
+    <a class="icon-item" href="http://zh.moegirl.org/Mainpage" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/moegirl.png" alt="萌娘百科" loading="lazy"><span>萌娘百科</span></a>
+    <a class="icon-item" href="http://bangumi.tv/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/bangumi.png" alt="Bangumi 番组计划" loading="lazy"><span>Bangumi 番组计划</span></a>
+    <a class="icon-item" href="http://nyato.com/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/miaote.jpg" alt="Nyato喵特漫展" loading="lazy"><span>Nyato喵特漫展</span></a>
+    <a class="icon-item" href="http://www.weibo.com/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/weibo.jpg" alt="新浪微博" loading="lazy"><span>新浪微博</span></a>
+    <a class="icon-item" href="http://tieba.baidu.com/" target="_blank" rel="noopener"><img src="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/baidu.jpg" alt="百度贴吧" loading="lazy"><span>百度贴吧</span></a>
+  </div>
 
-<div id="rfloat"><ul><li><a href="javascript:void(0)" onclick="window.scrollTo({top:0,behavior:'smooth'})">返回顶部</a></li></ul></div>
+  <!-- ===== 分类与卡片 ===== -->
+  <nav class="tabs" id="tabs"></nav>
+  <main class="grid" id="grid"></main>
 
-<!-- 分类区（JS 渲染） -->
-<div id="cats"></div>
-
-<div class="footer">
+  <div class="footer">
   <div class="link">
     <div class="linktop"><span>友情链接</span></div>
-    <ul><li><a href="" title="My all" target="_blank"></a></li></ul>
-    <br class="clear">
+    <ul></ul>
   </div>
-  <p>Copyright &copy; 2020 <a href="https://walaguaoeu.github.io/" target="_blank">WalaguAoeu</a></p>
+  <p>Copyright &copy; 2020 <a href="https://walaguaoeu.github.io/" target="_blank" rel="noopener">WalaguAoeu</a></p>
   <p>哇啦咕 - Aoeu 私人专属上网导航</p>
 </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-/* ============================================================
-   站点数据：在这里增删即可，格式 {名称, 链接}
-   color: y=黄 b=蓝 p=紫 g=绿
-   ============================================================ */
-const ICONS=[
-  ["哔哩哔哩弹幕视频网","http://www.bilibili.com/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/bili.png"],
-  ["AcFun弹幕视频网","http://www.acfun.tv/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/acfun.jpg"],
-  ["ニコニコ動画","http://www.nicovideo.jp/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/nico.png"],
-  ["半次元","http://bcy.net/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/banciyuan.png"],
-  ["pixiv","http://www.pixiv.net/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/pixiv.png"],
-  ["萌否电台","http://moe.fm/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/mengfou.jpg"],
-  ["萌娘百科","http://zh.moegirl.org/Mainpage","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/moegirl.png"],
-  ["Bangumi 番组计划","http://bangumi.tv/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/bangumi.png"],
-  ["Nyato喵特漫展","http://nyato.com/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/miaote.jpg"],
-  ["新浪微博","http://www.weibo.com/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/weibo.jpg"],
-  ["百度贴吧","http://tieba.baidu.com/","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/baidu.jpg"],
+/* ===== 搜索引擎 ===== */
+var ENGINES = [
+  {id:'baidu', name:'百度',  url:'https://www.baidu.com/s?wd='},
+  {id:'google',name:'Google',url:'https://www.google.com/search?q='},
+  {id:'bing',  name:'必应',  url:'https://www.bing.com/search?q='},
+  {id:'zhihu', name:'知乎',  url:'https://www.zhihu.com/search?type=content&q='},
+  {id:'bili',  name:'B站',   url:'https://search.bilibili.com/all?keyword='}
 ];
 
-const DATA=[
- {cat:"搜索",color:"y",links:[
-   ["谷歌搜索","https://www.google.com/"]
-   ,["搜狗搜索","https://www.sogou.com/"]
-   ,["必应搜索","https://cn.bing.com/"]
-   ,["知乎","https://www.zhihu.com/"]
-   ,["Yandex","https://yandex.com/"]
-   ,["Yahoo","https://yahoo.com/"]
-   ,["Seznam","https://www.seznam.cz/"]
-   
-   ]},
-   
-   
-   
-   
-   
-   
- {cat:"视频",color:"y",links:[
-   ["腾讯","http://v.qq.com/"]
-   ,["爱奇艺","http://www.iqiyi.com/"]
-   ,["优酷","http://www.youku.com/"]
-   ,["搜狐","http://tv.sohu.com/"]
-   ,["2345影视","https://kan.2345.com/"]
-   ,["Youtube","https://www.youtube.com/"]
-   ,["音范丝","https://www.yinfans.me/"]
-   ,["电影天堂","https://dygod.org/index.htm"]
-   ,["蓝光高清","https://www.4k007.com/"]
-   ,["樱之空","https://skr.skr2.cc:666/"]
-   ,["动漫","http://www.yinghua8.tv/"]
-   ,["荐","https://www.jianpian.com/"]
-   ,["视频解析","https://www.baidu.com/s?wd=视频解析"]
-   
-   ]},
- 
-  {cat:"AI",color:"b",links:[
-   ["秘塔","https://metaso.cn/"]
-   ,["腾讯元宝","https://yuanbao.tencent.com/"]
-   ,["DeepSeek","https://www.deepseek.com/"]
-   ,["豆包","https://www.doubao.com/chat/"]
-   ,["即梦","https://jimeng.jianying.com/"]
-   ,["通义万相","https://tongyi.aliyun.com/wan/"]
-   ,["天工","https://www.tiangong.cn/"]
-   ,["uTools","https://www.u-tools.cn/index.html"]
-   ,["AI作图","https://d.design/"]
-   ,["魔搭社区","https://modelscope.cn/"]
-   ,["hermesagent","https://desktop.hermesagent.org.cn/"]
-   ,["llama.cpp","https://github.com/ggml-org/llama.cpp"]
-   ,["sufy cdn","https://hf-cdn.sufy.com/"]
-   ,["HuggingFace","https://huggingface.co/"]
-   ,["HuggingFace","https://hf-mirror.com/"]
-	  
-   ]},
- 
- 
- 
- 
- 
- 
- 
- 
- 
- {cat:"游戏",color:"y",links:[
-   ["Steam","https://store.steampowered.com/about/"]
-   ,["WeGame","https://www.wegame.com.cn/home"]
-   ,["Epic","https://store.epicgames.com/zh-CN/"]
-   ,["3DM GAME","https://www.3dmgame.com/"]
-   ,["育碧游戏","https://zh-cn.ubisoft.com/"]
-   ,["游明星空","https://www.gamersky.com/"]
-   ,["XUGAME","https://www.xudanji.cn/"]
-   ,["4399","http://www.4399.com/"]
-   ,["7k7k","http://www.7k7k.com/"]
-   ,["17173","http://www.17173.com/"]
-   ,["逗游","http://www.doyo.cn/"]
-   ,["游讯游戏网","http://www.yxdown.com/"]
-   ,["Yikm","https://walaguaoeu.github.io/dh/www.yikm.net"]
-   ,["网页红警","https://game.gongheguozhihui.com/"]
-   
-   ]},
- 
- 
- 
-
- 
- 
- 
- 
- {cat:"模拟器",color:"y",links:[
-   ["mumu模拟器","https://mumu.163.com/"]
-   ,["雷电模拟器","https://www.ldmnq.com/"]
-   ,["逍遥模拟器","https://www.xyaz.cn/index2.html"]
-   ,["夜神模拟器","https://www.yeshen.com/"]
-   
-   ]},
- 
- 
- 
- 
- {cat:"直播",color:"y",links:[
-   ["斗鱼","https://www.douyu.com/"]
-   ,["虎牙","https://www.huya.com/"]
-   ,["抖音","https://www.douyin.com/"]
-   ,["CC","https://cc.163.com/"]
-   ,["快手","https://www.kuaishou.com/"]
-   ,["今日头条","https://www.toutiao.com/"]
-   ,["小红书","https://www.xiaohongshu.com/"]
-   
-   
-   ]},
- 
- 
- 
- 
- 
-  {cat:"其他",color:"b",links:[
-   ["GitHub","https://github.com/"]
-   ,["git加速下载","https://gh-proxy.com/"]
-   ,["Gitee","https://gitee.com/"]
-   ,["Cloudflare","https://www.cloudflare-cn.com/"]
-   ,["jsDelivr","https://www.jsdelivr.com/"]
-   ,["PyPI","https://pypi.org/"]
-   ,["uptme","https://uptimerobot.com/"]
-   ,["吾爱破解","https://www.52pojie.cn/"]
-   ,["看雪安全","https://bbs.pediy.com/"]  
-   ,["精易论坛","https://bbs.ijingyi.com/"]  
-   ,["52汇编","https://www.52hb.com/"]  
-   ,["文本api","https://textdb.online/"]  
-   ,["剪贴板","https://webnote.cc/walaguaoeu"]  
-   ,["文心验证","http://pro.1wxyun.com/"]  
-   ,["Api","https://api.pearktrue.cn/"]  
-   ,["JSON","https://www.json.cn/"]  
-   ,["ipv6","https://ip6.ro/"]  
-   
-   ]},
- 
- 
- 
- 
- 
-  {cat:"服务器",color:"b",links:[
-   ["雨云","https://www.rainyun.com/"]
-   ,["一诺","https://www.enuoidc.com/"]
-   ,["百度云","https://cloud.baidu.com/"]
-   ,["腾讯云","https://cloud.tencent.com/"]
-   ,["阿里云","https://www.aliyun.com/"]
-   ,["亿速云","https://www.yisu.com/"]
-   ,["火山引擎","https://www.volcengine.com/"]
-   ,["京东云","https://www.jdcloud.com/"]
-   ,["华为云","https://www.huaweicloud.com/"]
-   ,["亚马逊","https://aws.amazon.com/"]
-   ,["三丰云","https://www.sanfengyun.com/"]
-   ,["不大创造","https://www.ipxr.cn/"]
-    
-   
-   ]},
-
- 
- 
- 
- 
-  {cat:"域名模板",color:"b",links:[
-   ["NameSilo","https://www.namesilo.com/"]
-   ,["Namecheap","https://www.namecheap.com/"]
-   ,["name","https://www.name.com/zh-cn/"]
-   ,["DNSPod","https://www.dnspod.cn/"]
-   ,["Typecho","https://typecho.org/"]
-   ,["站长工具","https://tool.chinaz.com/"]
-   ,["在线ping","https://www.itdog.cn/"]
-   ,["缩短地址","https://suo.im/"]
-   ,["模版之家","https://sc.chinaz.com/moban/"]
-   ,["梦幻模版","http://www.dreamtemplate.com/"]
-   ,["笨牛","http://cdn.bnxb.com/"]
-   ,["数码资源网","https://www.95262.com/smzy/DownList_1514_1.html"]
-   ,["友盟","https://www.umeng.com/"]
-	   
-	  
-   ]},
- 
- 
- 
- 
- 
- {cat:"工具",color:"b",links:[
-   ["火绒安全","https://www.huorong.cn/"]
-   ,["vmware","https://www.vmware.com/"]
-   ,["OBS","https://obsproject.com/"]
-   ,["在线工具箱","https://tool.lu/"]
-   ,["moo0","https://zhs.moo0.com/"]
-   ,["小丸工具箱","https://dl.hdslb.com/video-press/BiliBiliEncoder.zip"]
-   ,["latex公式编辑器","https://www.latexlive.com/"]
-   ,["在线排版","https://paiban.gaodun.com/"]
-   ,["在线PS","https://www.tugaigai.com/online_ps/"]
-   ,["爱资料在线工具","https://www.toolnb.com/"]
-   ,["稿定设计","https://www.gaoding.com/?"]
-   ,["图片提取","https://web.baimiaoapp.com/"]
-   ,["改图鸭","https://www.gaituya.com/"]
-   ,["蒸汽机","https://magiconch.com/vaporwave/"]
-   ,["短视频解析","https://tools.liumingye.cn/"]
-   ,["图片压缩工具","https://docsmall.com/image-compress"]
-   ,["在线压缩和转换","https://www.onlineimagetool.com/zh/"]
-   ,["剪映","https://www.capcut.cn/"]
-   ,["格式工厂","https://www.pcfreetime.com/"]
-   ,["在线视频编辑","https://www.apowersoft.cn/online-video-editor"]
-   ,["在线图片编辑","https://ezgif.com/"]
-   ,["网页微信文件助手","https://filehelper.weixin.qq.com/"]
-   ,["方方格子","http://www.ffcell.com/"]
-   ,["方方注册","https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/gj/%E6%96%B9%E6%96%B9%E6%B3%A8%E5%86%8C.zip"]
-   ,["维修教程站","https://zh.ifixit.com/Guide"]
-   ,["以图搜索","https://trace.moe/"]
-   ,["纸由我","https://paperme.toolooz.com/"]
-   ,["一键抠图","https://remove.photos/"]
-   ,["在线PDF处理","https://docsmall.com/"]
-   ,["自由乐器","https://www.autopiano.cn/"]
-   ,["完美解码","https://jm.wmzhe.com/"]
-   
-   
-   ]},
- 
- 
- 
- 
-  {cat:"翻译",color:"y",links:[
-   ["百度翻译","https://fanyi.baidu.com/"]
-   ,["有道翻译","https://fanyi.youdao.com/"]
-   ,["翻译狗","https://www.fanyigou.com/totran/tranText.html"]
-   ,["搜狗翻译","https://fanyi.sogou.com/text"]
-   ,["彩云小译","https://fanyi.caiyunapp.com/"]
-   ,["腾讯翻译","https://fanyi.qq.com/"]
-   ,["CNKI翻译助手","https://dict.cnki.net/index"]
-   
-   ]},
-
- 
- 
- 
- 
- 
-  {cat:"音乐",color:"y",links:[
-   ["QQ音乐","http://music.baidu.com/"]
-   ,["网易云音乐","http://music.163.com/"]
-   ,["虾米音乐","https://conch.xiami.com/"]
-   ,["酷我音乐","http://www.kuwo.cn/"]
-   ,["酷狗音乐","http://www.kugou.com/"]
-   ,["音悦台","http://www.yinyuetai.com/"]
-   ,["千千音乐","https://music.91q.com/"]
-   
-   ]},
- 
- 
- 
- 
- 
- 
- 
- 
- {cat:"网盘",color:"y",links:[
-   ["百度网盘","https://pan.baidu.com/"]
-   ,["阿里云盘","https://www.alipan.com/"]
-   ,["夸克","https://www.quark.cn/"]
-   ,["日本无限","https://infini-cloud.net/en/"]
-   ,["UC网盘","https://drive.uc.cn/"]
-   ,["盘搜搜","https://pansoso.com/"]
-   ,["爱盘搜","https://aipanso.com/"]
-   ,["学霸盘","https://www.xuebapan.com/"]
-   ,["易搜","https://yiso.eu.org/"]
-   ,["猫狸盘搜","https://www.alipansou.com/"]
-   ,["热盘搜","http://www.repanso.com/"]
-   ,["Up云搜","https://www.upyunso.com/"]
-   ,["秒搜","https://miaosou.fun/"]
-   ,["资源搜","https://www.zhongchuangwl.com/"]
-   
-   ]},
- 
- 
- 
- {cat:"小说",color:"y",links:[
-   ["起点小说","http://www.qidian.com/"]
-   ,["hao123小说","http://www.hao123.com/book"]
-   ,["17k小说","http://www.17k.com/"]
-   ,["花语书城","http://huayu.baidu.com/"]
-   ,["纵横小说网","http://www.zongheng.com/"]
-   ,["创世中文网","http://chuangshi.qq.com/"]
-   ,["小说阅读网","https://www.readnovel.com/"]
-   ,["番茄小说","https://fanqienovel.com/"]
-   ,["飞卢小说","https://www.faloo.com/"]
-   ,["爱下书","http://www.aixiashu.la/"]
-   
-   ]},
- 
- 
- 
- {cat:"新闻资讯",color:"y",links:[
-   ["新浪新闻","http://news.sina.com.cn/"]
-   ,["腾讯新闻","http://news.qq.com/"]
-   ,["凤凰新闻","http://news.ifeng.com/"]
-   ,["东方头条","https://mini.eastday.com/"]
-   ,["搜狐新闻","http://news.sohu.com/"]
-   ,["人民网","http://www.people.com.cn/"]
-   ,["中华网","https://www.china.com/"]
-	
-   ]},
- 
- 
- 
- 
- {cat:"漫画",color:"y",links:[
-   ["极速漫画","http://www.1kkk.com/"]
-   ,["爱漫画","http://imanhua.com/"]
-   ,["久爱漫画","http://www.92mh.cc/"]
-   ,["吹妖动漫","https://www.chuiyao.com/"]
-   ,["动漫之家","http://manhua.dmzj.com/"]
-   ,["漫漫看","http://www.manmankan.com/"]
-   ,["有妖气","http://www.u17.com/"]
-   
-   
-   ]},
- 
- 
-  
- 
- 
- 
- 
- {cat:"下载",color:"b",links:[
-   ["Skr","https://skrbtpv.top/"]
-   ,["奇迹秀","https://www.qijishow.com/down/index.html"]
-   ,["音乐魔石","https://www.yym4.com/"]
-   ,["放屁音乐","https://www.fangpi.net/"]
-   ,["好听轻音乐","http://www.htqyy.com/"]
-   ,["无水印下载","https://www.datatool.vip/zh"]
-   ,["SeedHub","https://www.seedhub.cc/"]
-   ,["驱动之家","http://www.mydrivers.com/"]
-   ,["天空软件","www.skycn.com"] 
-   ,["华军软件","http://www.onlinedown.net/"]
-   ,["太平洋下载","http://dl.pconline.com.cn/"]
-   ,["新浪下载","https://digi.sina.com.cn/"]
-   ,["2345软件","https://www.duote.com/"]
-   ,["ZOL下载","https://xiazai.zol.com.cn/"]
-   
-   
-   ]},
- 
-
-
-
-
- 
-
-
-
- {cat:"字幕",color:"b",links:[
-   ["字幕库","http://www.zimuku.net/"]
-   ,["163字幕","http://www.163sub.com/"]
-   ,["SubHD","http://subhd.com/"]
-   ,["字幕组","http://www.zimuzu.tv/"]
-   ,["第三楼字幕","https://www.disanlou.org/"]
-   ,["字幕下载网","http://www.zmdown.com/"]
-   ,["CG SUB","http://www.cgsub.com/"]
-   
-   ]},
-
- 
- 
- 
- 
- 
- {cat:"APP",color:"b",links:[
-   ["菜鸟应用","http://www.cainiaoapp.cn/"]
-   ,["APP应用联盟","http://www.appzg.org/"]
-   ,["应用汇","https://www.appchina.com/"]
-   ,["三大哈网","http://www.sandaha.com/app/"]
-   ,["齐家网","https://www.jia.com/app/"]
-   ,["安卓网","http://apk.hiapk.com/"]
-   ,["网侠手机站","https://www.hackhome.com/"]
-   
-   ]},
- 
- 
- 
-
-
-
- {cat:"加速",color:"b",links:[
-   ["豆奶","https://dounai.pro/auth/login"]
-   ,["一元机场","https://xn--4gq62f52gdss.xyz/"]
-   ,["v2ray免费账号","https://shadowsocksr.org/"]
-   ,["翻墙机场","https://xn--mest5a943ag8x.cc/"]
-   ,["免费上网","https://clashgithub.com/category/freenode"]
-   ,["飞鸟云","https://github.com/QWQorz/feiniaoyun"]
-   ,["飞鸟云","https://github.com/jichangbaike/feiniaoyun"]
-   
-   ]},
-
-
-
- 
- 
- 
- 
- 
-  {cat:"装机",color:"p",links:[
-   ["CPU天梯图","https://cpu.exprank.com/"]
-   ,["显卡天梯图","https://gpu.exprank.com/"]
-   ,["刷新率检测","https://www.testufo.com/"]
-   ,["屏幕检测","https://screen.bmcx.com/"]
-   ,["测网速","https://test.ustc.edu.cn/"]
-   ,["键盘检测","https://www.zfrontier.com/lab/keyboardTester"]
-   ,["鼠标测试","https://www.mousetester.cn/"]
-   ,["手柄测试","https://www.gobing.cn/experiment/key"]
-   ,["爱纯净","https://www.aichunjing.com/"]
-   ,["系统之家","https://www.xitongzhijia.com/"]
-   ,["高清壁纸","https://haowallpaper.com/"]
-   ,["bulidcores 3dpc","https://buildcores.com/"]
-   ,["图吧工具箱","https://www.tbtool.cn/"]
-   
-   ]},
-
- 
- 
- 
- 
- 
-  {cat:"字体",color:"p",links:[
-   ["展哥收集","https://flowus.cn/thelaws/share/12828fe3-8806-4350-bfbe-4fc1d032e5db#888c5596-dbbc-4cdb-be31-d72266a4a111"]
-   ,["爱给","https://www.aigei.com/s?q=%E5%AD%97%E4%BD%93"]
-   ,["书法迷","http://www.shufami.com/"]
-   ,["第一字体","https://www.diyiziti.com/"]
-   ,["字体天下","https://www.fonts.net.cn/"]
-   ,["毛笔字体","https://www.zhenhaotv.com/"]
-   ,["字体家","https://www.zitijia.com/"]
-   
-   ]},
-
- 
- 
- 
- 
- 
- 
- {cat:"博客",color:"p",links:[
-   ["博客网","http://www.bokee.com/"]
-   ,["新浪博客","https://blog.sina.com.cn/"]
-   ,["腾讯博客","https://www.qq.com/"]
-   ,["凤凰博客","http://blog.ifeng.com/"]
-   ,["森七博客","http://www.mosq.cn/"]
-   ,["网易博客","https://blog.163.com/"]
-   ,["搜狐博客","https://blog.sohu.com/"]
-   ,["峰哥","https://zzzzzz.me/"]
-   ,["不错吧","https://bbs.bcb5.com/"]
-   ,["三岁","https://www.sansuib.com/"]
-   ,["零度博客","https://www.freedidi.com/"]
- 
-   
-   ]},
- 
- 
- 
- 
- 
- 
- 
- 
- 
-  {cat:"导航",color:"p",links:[
-   ["小编","http://www.xiaobianji.com/"]
-   ,["123导航","https://www.hao123.com/"]
-   ,["果汁","http://guozhivip.com/rank/"]
-   
-   ]},
- 
- 
- 
- 
-  {cat:"论坛",color:"p",links:[
-   ["天涯","http://www.tianya.cn/"]
-   ,["新浪论坛","http://bbs.sina.com.cn/"]
-   ,["猫扑","http://www.mop.com/"]
-   ,["凤凰论坛","http://bbs.ifeng.com/"]
-   ,["互动中国","http://forum.china.com.cn/"]
-   ,["强国社区","https://www.people.cn/"]
-   ,["网易论坛","http://bbs.163.com/"]
-   
-   ]},
-
- 
- 
- 
-
-
-
-
-{cat:"图册",color:"p",links:[
-   ["企业画册网","http://www.huacew.com/"]
-   ,["画册设计网","http://www.shnek4a.com/"]
-   ,["创意猫","https://www.chuangyimao.com/"]
-   ,["素材公社","https://www.tooopen.com/view/197596.html"]
-   ,["千图网","https://www.58pic.com/tupian/huace.html"]
-   ,["印易得","http://www.yinyide.com/"]
-   ,["江阴画册","http://www.hcwjy.com/"]
-   
-   
-   ]},
-
-
-
-
-
-
-{cat:"图画",color:"p",links:[
-   ["爱画网","http://www.art456.com/"]
-   ,["图片库","http://www.tuku.cn/"]
-   ,["昵图网","https://www.nipic.com/index.html"]
-   ,["天极网","https://pic.yesky.com/"]
-   ,["全景网","https://www.quanjing.com/"]
-   ,["天堂图片","https://www.ivsky.com/"]
-   ,["51贴图","http://www.51tietu.net/tp/"]
-   
-   
-   ]},
-
-
-
-
-
-
-
- {cat:"学习",color:"p",links:[
-   ["直线网","https://www.linecg.com/"]
-   ,["我要自学网","http://www.pcjsh.com/"]
-   ,["站酷","http://www.zcool.com.cn/"]
-   ,["慕课网","http://www.imooc.com/"]
-   ,["极客学院","http://www.jikexueyuan.com/"]
-   ,["网易云课堂","http://study.163.com/"]
-   ,["维度空间","http://www.2ii.me/"]
-   ,["中国大学MOOC","https://www.icourse163.org/"]
-   ,["国图公开课","http://open.nlc.cn/onlineedu/client/index.htm"]
-   ,["学堂在线","https://www.xuetangx.com/"]
-   ,["多邻国","https://www.duolingo.cn/"]
-   ,["wikihow","https://zh.wikihow.com/%E9%A6%96%E9%A1%B5"]
-   ,["观沧海","https://www.ageeye.cn/"]
-   
-   ]},
- 
- 
- 
- 
- 
- 
- 
-  {cat:"图书馆",color:"p",links:[
-   ["国家数字图书馆","https://www.nlc.cn/web/index.shtml"]
-   ,["超星数字图书馆","https://www.sslibrary.com/user/login/showlogin?clg=1"]
-   ,["中华珍宝馆","https://g2.ltfc.net/"]
-   ,["上海教育出版社图书馆","https://www.pep.com.cn/tsg/"]
-   ,["国家哲学社会科学文献","https://www.ncpssd.org/index.aspx"]
-   ,["中国科学院文献情报中","https://www.las.ac.cn/"]
-   ,["国家科技数字图书馆","https://www.nstl.gov.cn/"]
-   ,["汉斯出版社中文学术期","https://www.hanspub.org/"]
-   ,["法律法规","https://www.pkulaw.com/"]
-   ,["NSII国家动物","http://museum.ioz.ac.cn/"]
-   ,["全宋词","http://qsc.zww.cn/"]
-   ,["世界数字图书馆","https://www.loc.gov/collections/world-digital-library/about-this-collection/"]
-   ,["法国国家图书馆","https://www.bnf.fr/fr"]
-   ,["古腾堡计划","https://www.gutenberg.org/"]
-   ,["日本青空文库","https://www.aozora.gr.jp/"]
-   ,["乡间郎中","https://www.xjlz365.com/"]
-   ,["懒人Excel","https://www.lanrenexcel.com/"]
-   ,["简明日语","https://www3.nhk.or.jp/nhkworld/lesson/zh/"]
-   ,["元素周期表","https://pt.ziziyi.com/element/mc"]
-   ,["中国医药查询","https://www.dayi.org.cn/"]
-   ,["考公知识库","https://saduck.top/"]
-   ,["知识可视化","https://phet.colorado.edu/zh_CN/"]
-   ,["国家统计数据","https://data.stats.gov.cn/dg/website/page.html#/pc/national/home"]
-   
-   ]},
- 
- 
- 
- 
- 
- 
- 
- {cat:"文库",color:"p",links:[
-   ["中国知网","https://www.cnki.net/"]
-   ,["第一范文网","https://www.diyifanwen.com/"]
-   ,["MBA智库","https://doc.mbalib.com/"]
-   ,["道客巴巴","https://www.doc88.com/"]
-   ,["豆丁网","https://www.docin.com/"]
-   ,["百度文库","https://wenku.baidu.com/"]
-   
-   ]},
-
-
-
-
-
-
-
- {cat:"COS",color:"p",links:[
-   ["我爱cos","http://www.52cos.cn/"]
-   ,["cosplay网","http://www.cosplay8.com/index.html"]
-   ,["动漫星空cos","https://acg.gamersky.com/pic/cosplay/"]
-   ,["考死受","http://www.cos-show.com/"]
-   ,["cos动漫","http://www.cosdm.com/"]
-   ,["cosplay王国","http://www.cosplayzone.net/portal.php"]
-   ,["cosplay啦","https://cosplay.la/"]
-   
-   ]},
-
-
-
-
-
-
-
- {cat:"手办",color:"p",links:[
-   ["我爱手办","http://www.shoubanjiang.com/anime"]
-   ,["手办原型网","http://www.aboutgk.com/"]
-   ,["178","https://www.stargame.com/acg"]
-   ,["次元碉堡","http://acgdb.com/"]
-   ,["XiaoT模型","http://www.xiaot.com/"]
-   ,["高达同好","https://www.aemedia.org/"]
-   ,["手办吧","http://tieba.baidu.com/"]
-   
-   ]},
-
- 
- 
- 
- 
- 
- {cat:"理财",color:"g",links:[
-   ["大麦理财","http://www.damailicai.com/"]
-   ,["搜狗理财","http://fa.sogou.com/"]
-   ,["懒财网","https://www.lancai.cn/index.html"]
-   ,["抱财网","https://www.baocai.com/"]
-   ,["小狗钱钱","http://www.xgqq.com/"]
-   ,["中国理财网","https://www.chinawealth.com.cn/"]
-   ,["易通贷","https://www.etongdai.com/"]
-   
-   ]},
- 
- 
- 
- 
- 
- 
- {cat:"企业查询",color:"g",links:[
-   ["天眼查","https://www.tianyancha.com/"]
-   ,["企查查","https://www.qcc.com/"]
-   ,["企查猫","https://www.qichamao.com/"]
-   
-   ]},
-
-
-
-
-
-
- {cat:"求职",color:"g",links:[
-   ["猎聘网","https://www.liepin.com/"]
-   ,["赶集网","https://passport.58.com/v2/login?isredirect=true&source=58-ganji-pc&path=https%3A%2F%2Fganji.com"]
-   ,["前程无忧","http://www.51job.com/"]
-   ,["中华英才","http://www.chinahr.com/"]
-   ,["智联招聘","http://www.zhaopin.com/"]
-   ,["58同城","https://ty.58.com/"]
-   ,["应届生求职","http://www.yingjiesheng.com/"]
-  
-   ]},
- 
- 
- 
- 
- 
-  {cat:"生活",color:"g",links:[
-   ["生活网","http://www.shw365.com/"]
-   ,["城市生活网","http://www.iecity.com/"]
-   ,["连手网","https://lshou.com/"]
-   ,["百姓网","https://baixing.com/"]
-   ,["本来生活网","https://www.benlai.com/"]
-   ,["中华生活网","http://www.369518.com/"]
-   ,["生活服务网","https://shenghuo.huangye88.com/"]
-  
-   ]},
- 
- 
- 
- 
- 
- 
- 
- {cat:"交通",color:"g",links:[
-   ["12306","https://www.12306.cn/"]
-   ,["携程","https://www.ctrip.com/"]
-   ,["飞猪","https://www.fliggy.com/"]
-   ,["8684公交查询","https://www.8684.cn/"]
-   ,["8684地铁查询网","https://dt.8684.cn/"]
-   ,["图吧公交","https://bus.mapbar.com/"]
-   ,["图吧地铁","https://ditie.mapbar.com/"]
-
-   ]},
- 
- 
- 
- 
- 
- {cat:"购物",color:"g",links:[
-   ["淘宝","https://www.taobao.com/"]
-   ,["天猫","https://www.tmall.com/"]
-   ,["苏宁易购","https://www.suning.com/"]
-   ,["亚马逊","https://www.amazon.cn/"]
-   ,["唯品会","http://www.vip.com/"]
-   ,["京东","http://www.jd.com/"]
-   ,["聚美优品","http://bj.jumei.com/"]
-	
-   ]},
- 
- 
- 
- 
- 
- {cat:"快递查询",color:"g",links:[
-   ["快递100","https://www.kuaidi100.com/"]
-   ,["顺丰","https://www.sf-express.com/"]
-   ,["EMS","https://www.ems.com.cn/"]
-   ,["韵达","https://www.yundaex.com/"]
-   ,["申通","https://www.sto.cn/"]
-   ,["圆通","https://www.kuaidi100.com/all/yt.shtml"]
-   ,["爱查快递","https://www.ickd.cn/"]
-   
-   ]},
- 
- 
- 
- 
- 
- {cat:"邮箱",color:"g",links:[
-   ["163邮箱","http://mail.163.com/"]
-   ,["tom邮箱","http://web.mail.tom.com/webmail/login/index.action"]
-   ,["新浪邮箱","http://mail.sina.com.cn/"]
-   ,["126邮箱","http://www.126.com/"]
-   ,["QQ邮箱","https://mail.qq.com/"]
-   ,["188财富邮","https://www.188.com/"]
-   
-   ]},
- 
- 
- 
- 
- 
- {cat:"奇怪的网站",color:"g",links:[
-   ["无用的网站","https://theuselessweb.com/"]
-   ,["纪妖","https://www.cbaigui.com/"]
-   ,["吃什么","https://chishenme.xyz/"]
-   ,["时光邮局","https://www.hi2future.com/"]
-   ,["幻觉生成","https://strobe.cool/"]
-   ,["云段子","https://www.yduanzi.com/"]
-   ,["好好说话","https://lab.magiconch.com/nbnhhsh/"]
-   
-   
-   ]},
-
-
-
-
-
-
- {cat:"体育",color:"g",links:[
-   ["足球","https://www.dyjw.com/matches"]
-   
-   ]},
-
-
-
-
-
- {cat:"彩票",color:"g",links:[
-   ["新浪彩票","https://lottery.sina.com.cn/"]
-   ,["双色球历史","https://kaijiang.zhcw.com/zhcw/html/ssq/list.html"]
-   ,["彩票查询","https://caipiao.ip138.com/"]
-   ,["中彩网","https://www.zhcw.com/"]
-
-   
-   ]},
-
-
-
-
-
- {cat:"汽车",color:"g",links:[
-   ["太平洋汽车","https://price.pcauto.com.cn/"]
-   ,["汽车之家","https://www.autohome.com.cn/hechi/"]
-   ,["易车","https://www.yiche.com/"]
-   ,["搜狐汽车网","https://db.auto.sohu.com/home/?spm=smpc.home.top-nav.17.1555312357871pGAAq77"]
-   ,["爱卡汽车网","https://www.xcar.com.cn/"]
-
-   
-   
-   ]},
-
-
-
-
-
-
-
+/* ===== 内置网站 =====
+   格式：[名称, 网址, 颜色(可选)]，颜色不填时自动分配。
+   新增网站：往对应分类数组加一行即可，例如：['小红书','https://www.xiaohongshu.com']
+   也可在下方任意位置用 addSite('分类id', ['名称','网址']) 动态添加。
+*/
+var SITES = {
+  search: [
+    ['谷歌搜索','https://www.google.com/'],
+    ['搜狗搜索','https://www.sogou.com/'],
+    ['必应搜索','https://cn.bing.com/'],
+    ['知乎','https://www.zhihu.com/'],
+    ['Yandex','https://yandex.com/'],
+    ['Yahoo','https://yahoo.com/'],
+    ['Seznam','https://www.seznam.cz/']
+  ],
+  vid: [
+    ['腾讯','http://v.qq.com/'],
+    ['爱奇艺','http://www.iqiyi.com/'],
+    ['优酷','http://www.youku.com/'],
+    ['搜狐','http://tv.sohu.com/'],
+    ['2345影视','https://kan.2345.com/'],
+    ['Youtube','https://www.youtube.com/'],
+    ['音范丝','https://www.yinfans.me/'],
+    ['电影天堂','https://dygod.org/index.htm'],
+    ['蓝光高清','https://www.4k007.com/'],
+    ['樱之空','https://skr.skr2.cc:666/'],
+    ['动漫','http://www.yinghua8.tv/'],
+    ['荐','https://www.jianpian.com/'],
+    ['视频解析','https://www.baidu.com/s?wd=视频解析']
+  ],
+  ai: [
+    ['秘塔','https://metaso.cn/'],
+    ['腾讯元宝','https://yuanbao.tencent.com/'],
+    ['DeepSeek','https://www.deepseek.com/'],
+    ['豆包','https://www.doubao.com/chat/'],
+    ['即梦','https://jimeng.jianying.com/'],
+    ['通义万相','https://tongyi.aliyun.com/wan/'],
+    ['天工','https://www.tiangong.cn/'],
+    ['uTools','https://www.u-tools.cn/index.html'],
+    ['AI作图','https://d.design/'],
+    ['魔搭社区','https://modelscope.cn/'],
+    ['hermesagent','https://desktop.hermesagent.org.cn/'],
+    ['llama.cpp','https://github.com/ggml-org/llama.cpp'],
+    ['sufy cdn','https://hf-cdn.sufy.com/'],
+    ['HuggingFace','https://huggingface.co/'],
+    ['HuggingFace','https://hf-mirror.com/']
+  ],
+  games: [
+    ['Steam','https://store.steampowered.com/about/'],
+    ['WeGame','https://www.wegame.com.cn/home'],
+    ['Epic','https://store.epicgames.com/zh-CN/'],
+    ['3DM GAME','https://www.3dmgame.com/'],
+    ['育碧游戏','https://zh-cn.ubisoft.com/'],
+    ['游明星空','https://www.gamersky.com/'],
+    ['XUGAME','https://www.xudanji.cn/'],
+    ['4399','http://www.4399.com/'],
+    ['7k7k','http://www.7k7k.com/'],
+    ['17173','http://www.17173.com/'],
+    ['逗游','http://www.doyo.cn/'],
+    ['游讯游戏网','http://www.yxdown.com/'],
+    ['Yikm','https://walaguaoeu.github.io/dh/www.yikm.net'],
+    ['网页红警','https://game.gongheguozhihui.com/']
+  ],
+  simu: [
+    ['mumu模拟器','https://mumu.163.com/'],
+    ['雷电模拟器','https://www.ldmnq.com/'],
+    ['逍遥模拟器','https://www.xyaz.cn/index2.html'],
+    ['夜神模拟器','https://www.yeshen.com/']
+  ],
+  live: [
+    ['斗鱼','https://www.douyu.com/'],
+    ['虎牙','https://www.huya.com/'],
+    ['抖音','https://www.douyin.com/'],
+    ['CC','https://cc.163.com/'],
+    ['快手','https://www.kuaishou.com/'],
+    ['今日头条','https://www.toutiao.com/'],
+    ['小红书','https://www.xiaohongshu.com/']
+  ],
+  other: [
+    ['GitHub','https://github.com/'],
+    ['git加速下载','https://gh-proxy.com/'],
+    ['Gitee','https://gitee.com/'],
+    ['Cloudflare','https://www.cloudflare-cn.com/'],
+    ['jsDelivr','https://www.jsdelivr.com/'],
+    ['PyPI','https://pypi.org/'],
+    ['uptme','https://uptimerobot.com/'],
+    ['吾爱破解','https://www.52pojie.cn/'],
+    ['看雪安全','https://bbs.pediy.com/'],
+    ['精易论坛','https://bbs.ijingyi.com/'],
+    ['52汇编','https://www.52hb.com/'],
+    ['文本api','https://textdb.online/'],
+    ['剪贴板','https://webnote.cc/walaguaoeu'],
+    ['文心验证','http://pro.1wxyun.com/'],
+    ['Api','https://api.pearktrue.cn/'],
+    ['JSON','https://www.json.cn/'],
+    ['ipv6','https://ip6.ro/']
+  ],
+  server: [
+    ['雨云','https://www.rainyun.com/'],
+    ['一诺','https://www.enuoidc.com/'],
+    ['百度云','https://cloud.baidu.com/'],
+    ['腾讯云','https://cloud.tencent.com/'],
+    ['阿里云','https://www.aliyun.com/'],
+    ['亿速云','https://www.yisu.com/'],
+    ['火山引擎','https://www.volcengine.com/'],
+    ['京东云','https://www.jdcloud.com/'],
+    ['华为云','https://www.huaweicloud.com/'],
+    ['亚马逊','https://aws.amazon.com/'],
+    ['三丰云','https://www.sanfengyun.com/'],
+    ['不大创造','https://www.ipxr.cn/']
+  ],
+  domain: [
+    ['NameSilo','https://www.namesilo.com/'],
+    ['Namecheap','https://www.namecheap.com/'],
+    ['name','https://www.name.com/zh-cn/'],
+    ['DNSPod','https://www.dnspod.cn/'],
+    ['Typecho','https://typecho.org/'],
+    ['站长工具','https://tool.chinaz.com/'],
+    ['在线ping','https://www.itdog.cn/'],
+    ['缩短地址','https://suo.im/'],
+    ['模版之家','https://sc.chinaz.com/moban/'],
+    ['梦幻模版','http://www.dreamtemplate.com/'],
+    ['笨牛','http://cdn.bnxb.com/'],
+    ['数码资源网','https://www.95262.com/smzy/DownList_1514_1.html'],
+    ['友盟','https://www.umeng.com/']
+  ],
+  util: [
+    ['火绒安全','https://www.huorong.cn/'],
+    ['vmware','https://www.vmware.com/'],
+    ['OBS','https://obsproject.com/'],
+    ['在线工具箱','https://tool.lu/'],
+    ['moo0','https://zhs.moo0.com/'],
+    ['小丸工具箱','https://dl.hdslb.com/video-press/BiliBiliEncoder.zip'],
+    ['latex公式编辑器','https://www.latexlive.com/'],
+    ['在线排版','https://paiban.gaodun.com/'],
+    ['在线PS','https://www.tugaigai.com/online_ps/'],
+    ['爱资料在线工具','https://www.toolnb.com/'],
+    ['稿定设计','https://www.gaoding.com/?'],
+    ['图片提取','https://web.baimiaoapp.com/'],
+    ['改图鸭','https://www.gaituya.com/'],
+    ['蒸汽机','https://magiconch.com/vaporwave/'],
+    ['短视频解析','https://tools.liumingye.cn/'],
+    ['图片压缩工具','https://docsmall.com/image-compress'],
+    ['在线压缩和转换','https://www.onlineimagetool.com/zh/'],
+    ['剪映','https://www.capcut.cn/'],
+    ['格式工厂','https://www.pcfreetime.com/'],
+    ['在线视频编辑','https://www.apowersoft.cn/online-video-editor'],
+    ['在线图片编辑','https://ezgif.com/'],
+    ['网页微信文件助手','https://filehelper.weixin.qq.com/'],
+    ['方方格子','http://www.ffcell.com/'],
+    ['方方注册','https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/gj/%E6%96%B9%E6%96%B9%E6%B3%A8%E5%86%8C.zip'],
+    ['维修教程站','https://zh.ifixit.com/Guide'],
+    ['以图搜索','https://trace.moe/'],
+    ['纸由我','https://paperme.toolooz.com/'],
+    ['一键抠图','https://remove.photos/'],
+    ['在线PDF处理','https://docsmall.com/'],
+    ['自由乐器','https://www.autopiano.cn/'],
+    ['完美解码','https://jm.wmzhe.com/']
+  ],
+  trans: [
+    ['百度翻译','https://fanyi.baidu.com/'],
+    ['有道翻译','https://fanyi.youdao.com/'],
+    ['翻译狗','https://www.fanyigou.com/totran/tranText.html'],
+    ['搜狗翻译','https://fanyi.sogou.com/text'],
+    ['彩云小译','https://fanyi.caiyunapp.com/'],
+    ['腾讯翻译','https://fanyi.qq.com/'],
+    ['CNKI翻译助手','https://dict.cnki.net/index']
+  ],
+  mus: [
+    ['QQ音乐','http://music.baidu.com/'],
+    ['网易云音乐','http://music.163.com/'],
+    ['虾米音乐','https://conch.xiami.com/'],
+    ['酷我音乐','http://www.kuwo.cn/'],
+    ['酷狗音乐','http://www.kugou.com/'],
+    ['音悦台','http://www.yinyuetai.com/'],
+    ['千千音乐','https://music.91q.com/']
+  ],
+  pan: [
+    ['百度网盘','https://pan.baidu.com/'],
+    ['阿里云盘','https://www.alipan.com/'],
+    ['夸克','https://www.quark.cn/'],
+    ['日本无限','https://infini-cloud.net/en/'],
+    ['UC网盘','https://drive.uc.cn/'],
+    ['盘搜搜','https://pansoso.com/'],
+    ['爱盘搜','https://aipanso.com/'],
+    ['学霸盘','https://www.xuebapan.com/'],
+    ['易搜','https://yiso.eu.org/'],
+    ['猫狸盘搜','https://www.alipansou.com/'],
+    ['热盘搜','http://www.repanso.com/'],
+    ['Up云搜','https://www.upyunso.com/'],
+    ['秒搜','https://miaosou.fun/'],
+    ['资源搜','https://www.zhongchuangwl.com/']
+  ],
+  novel: [
+    ['起点小说','http://www.qidian.com/'],
+    ['hao123小说','http://www.hao123.com/book'],
+    ['17k小说','http://www.17k.com/'],
+    ['花语书城','http://huayu.baidu.com/'],
+    ['纵横小说网','http://www.zongheng.com/'],
+    ['创世中文网','http://chuangshi.qq.com/'],
+    ['小说阅读网','https://www.readnovel.com/'],
+    ['番茄小说','https://fanqienovel.com/'],
+    ['飞卢小说','https://www.faloo.com/'],
+    ['爱下书','http://www.aixiashu.la/']
+  ],
+  newsd: [
+    ['新浪新闻','http://news.sina.com.cn/'],
+    ['腾讯新闻','http://news.qq.com/'],
+    ['凤凰新闻','http://news.ifeng.com/'],
+    ['东方头条','https://mini.eastday.com/'],
+    ['搜狐新闻','http://news.sohu.com/'],
+    ['人民网','http://www.people.com.cn/'],
+    ['中华网','https://www.china.com/']
+  ],
+  comic: [
+    ['极速漫画','http://www.1kkk.com/'],
+    ['爱漫画','http://imanhua.com/'],
+    ['久爱漫画','http://www.92mh.cc/'],
+    ['吹妖动漫','https://www.chuiyao.com/'],
+    ['动漫之家','http://manhua.dmzj.com/'],
+    ['漫漫看','http://www.manmankan.com/'],
+    ['有妖气','http://www.u17.com/']
+  ],
+  down: [
+    ['Skr','https://skrbtpv.top/'],
+    ['奇迹秀','https://www.qijishow.com/down/index.html'],
+    ['音乐魔石','https://www.yym4.com/'],
+    ['放屁音乐','https://www.fangpi.net/'],
+    ['好听轻音乐','http://www.htqyy.com/'],
+    ['无水印下载','https://www.datatool.vip/zh'],
+    ['SeedHub','https://www.seedhub.cc/'],
+    ['驱动之家','http://www.mydrivers.com/'],
+    ['天空软件','http://www.skycn.com'],
+    ['华军软件','http://www.onlinedown.net/'],
+    ['太平洋下载','http://dl.pconline.com.cn/'],
+    ['新浪下载','https://digi.sina.com.cn/'],
+    ['2345软件','https://www.duote.com/'],
+    ['ZOL下载','https://xiazai.zol.com.cn/']
+  ],
+  sub: [
+    ['字幕库','http://www.zimuku.net/'],
+    ['163字幕','http://www.163sub.com/'],
+    ['SubHD','http://subhd.com/'],
+    ['字幕组','http://www.zimuzu.tv/'],
+    ['第三楼字幕','https://www.disanlou.org/'],
+    ['字幕下载网','http://www.zmdown.com/'],
+    ['CG SUB','http://www.cgsub.com/']
+  ],
+  app: [
+    ['菜鸟应用','http://www.cainiaoapp.cn/'],
+    ['APP应用联盟','http://www.appzg.org/'],
+    ['应用汇','https://www.appchina.com/'],
+    ['三大哈网','http://www.sandaha.com/app/'],
+    ['齐家网','https://www.jia.com/app/'],
+    ['安卓网','http://apk.hiapk.com/'],
+    ['网侠手机站','https://www.hackhome.com/']
+  ],
+  vpn: [
+    ['豆奶','https://dounai.pro/auth/login'],
+    ['一元机场','https://xn--4gq62f52gdss.xyz/'],
+    ['v2ray免费账号','https://shadowsocksr.org/'],
+    ['翻墙机场','https://xn--mest5a943ag8x.cc/'],
+    ['免费上网','https://clashgithub.com/category/freenode'],
+    ['飞鸟云','https://github.com/QWQorz/feiniaoyun'],
+    ['飞鸟云','https://github.com/jichangbaike/feiniaoyun']
+  ],
+  pc: [
+    ['CPU天梯图','https://cpu.exprank.com/'],
+    ['显卡天梯图','https://gpu.exprank.com/'],
+    ['刷新率检测','https://www.testufo.com/'],
+    ['屏幕检测','https://screen.bmcx.com/'],
+    ['测网速','https://test.ustc.edu.cn/'],
+    ['键盘检测','https://www.zfrontier.com/lab/keyboardTester'],
+    ['鼠标测试','https://www.mousetester.cn/'],
+    ['手柄测试','https://www.gobing.cn/experiment/key'],
+    ['爱纯净','https://www.aichunjing.com/'],
+    ['系统之家','https://www.xitongzhijia.com/'],
+    ['高清壁纸','https://haowallpaper.com/'],
+    ['bulidcores 3dpc','https://buildcores.com/'],
+    ['图吧工具箱','https://www.tbtool.cn/']
+  ],
+  font: [
+    ['展哥收集','https://flowus.cn/thelaws/share/12828fe3-8806-4350-bfbe-4fc1d032e5db#888c5596-dbbc-4cdb-be31-d72266a4a111'],
+    ['爱给','https://www.aigei.com/s?q=%E5%AD%97%E4%BD%93'],
+    ['书法迷','http://www.shufami.com/'],
+    ['第一字体','https://www.diyiziti.com/'],
+    ['字体天下','https://www.fonts.net.cn/'],
+    ['毛笔字体','https://www.zhenhaotv.com/'],
+    ['字体家','https://www.zitijia.com/']
+  ],
+  blog: [
+    ['博客网','http://www.bokee.com/'],
+    ['新浪博客','https://blog.sina.com.cn/'],
+    ['腾讯博客','https://www.qq.com/'],
+    ['凤凰博客','http://blog.ifeng.com/'],
+    ['森七博客','http://www.mosq.cn/'],
+    ['网易博客','https://blog.163.com/'],
+    ['搜狐博客','https://blog.sohu.com/'],
+    ['峰哥','https://zzzzzz.me/'],
+    ['不错吧','https://bbs.bcb5.com/'],
+    ['三岁','https://www.sansuib.com/'],
+    ['零度博客','https://www.freedidi.com/']
+  ],
+  daohang: [
+    ['小编','http://www.xiaobianji.com/'],
+    ['123导航','https://www.hao123.com/'],
+    ['果汁','http://guozhivip.com/rank/']
+  ],
+  forum: [
+    ['天涯','http://www.tianya.cn/'],
+    ['新浪论坛','http://bbs.sina.com.cn/'],
+    ['猫扑','http://www.mop.com/'],
+    ['凤凰论坛','http://bbs.ifeng.com/'],
+    ['互动中国','http://forum.china.com.cn/'],
+    ['强国社区','https://www.people.cn/'],
+    ['网易论坛','http://bbs.163.com/']
+  ],
+  album: [
+    ['企业画册网','http://www.huacew.com/'],
+    ['画册设计网','http://www.shnek4a.com/'],
+    ['创意猫','https://www.chuangyimao.com/'],
+    ['素材公社','https://www.tooopen.com/view/197596.html'],
+    ['千图网','https://www.58pic.com/tupian/huace.html'],
+    ['印易得','http://www.yinyide.com/'],
+    ['江阴画册','http://www.hcwjy.com/']
+  ],
+  pic: [
+    ['爱画网','http://www.art456.com/'],
+    ['图片库','http://www.tuku.cn/'],
+    ['昵图网','https://www.nipic.com/index.html'],
+    ['天极网','https://pic.yesky.com/'],
+    ['全景网','https://www.quanjing.com/'],
+    ['天堂图片','https://www.ivsky.com/'],
+    ['51贴图','http://www.51tietu.net/tp/']
+  ],
+  learn: [
+    ['直线网','https://www.linecg.com/'],
+    ['我要自学网','http://www.pcjsh.com/'],
+    ['站酷','http://www.zcool.com.cn/'],
+    ['慕课网','http://www.imooc.com/'],
+    ['极客学院','http://www.jikexueyuan.com/'],
+    ['网易云课堂','http://study.163.com/'],
+    ['维度空间','http://www.2ii.me/'],
+    ['中国大学MOOC','https://www.icourse163.org/'],
+    ['国图公开课','http://open.nlc.cn/onlineedu/client/index.htm'],
+    ['学堂在线','https://www.xuetangx.com/'],
+    ['多邻国','https://www.duolingo.cn/'],
+    ['wikihow','https://zh.wikihow.com/%E9%A6%96%E9%A1%B5'],
+    ['观沧海','https://www.ageeye.cn/']
+  ],
+  lib: [
+    ['国家数字图书馆','https://www.nlc.cn/web/index.shtml'],
+    ['超星数字图书馆','https://www.sslibrary.com/user/login/showlogin?clg=1'],
+    ['中华珍宝馆','https://g2.ltfc.net/'],
+    ['上海教育出版社图书馆','https://www.pep.com.cn/tsg/'],
+    ['国家哲学社会科学文献','https://www.ncpssd.org/index.aspx'],
+    ['中国科学院文献情报中','https://www.las.ac.cn/'],
+    ['国家科技数字图书馆','https://www.nstl.gov.cn/'],
+    ['汉斯出版社中文学术期','https://www.hanspub.org/'],
+    ['法律法规','https://www.pkulaw.com/'],
+    ['NSII国家动物','http://museum.ioz.ac.cn/'],
+    ['全宋词','http://qsc.zww.cn/'],
+    ['世界数字图书馆','https://www.loc.gov/collections/world-digital-library/about-this-collection/'],
+    ['法国国家图书馆','https://www.bnf.fr/fr'],
+    ['古腾堡计划','https://www.gutenberg.org/'],
+    ['日本青空文库','https://www.aozora.gr.jp/'],
+    ['乡间郎中','https://www.xjlz365.com/'],
+    ['懒人Excel','https://www.lanrenexcel.com/'],
+    ['简明日语','https://www3.nhk.or.jp/nhkworld/lesson/zh/'],
+    ['元素周期表','https://pt.ziziyi.com/element/mc'],
+    ['中国医药查询','https://www.dayi.org.cn/'],
+    ['考公知识库','https://saduck.top/'],
+    ['知识可视化','https://phet.colorado.edu/zh_CN/'],
+    ['国家统计数据','https://data.stats.gov.cn/dg/website/page.html#/pc/national/home']
+  ],
+  wenku: [
+    ['中国知网','https://www.cnki.net/'],
+    ['第一范文网','https://www.diyifanwen.com/'],
+    ['MBA智库','https://doc.mbalib.com/'],
+    ['道客巴巴','https://www.doc88.com/'],
+    ['豆丁网','https://www.docin.com/'],
+    ['百度文库','https://wenku.baidu.com/']
+  ],
+  cos: [
+    ['我爱cos','http://www.52cos.cn/'],
+    ['cosplay网','http://www.cosplay8.com/index.html'],
+    ['动漫星空cos','https://acg.gamersky.com/pic/cosplay/'],
+    ['考死受','http://www.cos-show.com/'],
+    ['cos动漫','http://www.cosdm.com/'],
+    ['cosplay王国','http://www.cosplayzone.net/portal.php'],
+    ['cosplay啦','https://cosplay.la/']
+  ],
+  figure: [
+    ['我爱手办','http://www.shoubanjiang.com/anime'],
+    ['手办原型网','http://www.aboutgk.com/'],
+    ['178','https://www.stargame.com/acg'],
+    ['次元碉堡','http://acgdb.com/'],
+    ['XiaoT模型','http://www.xiaot.com/'],
+    ['高达同好','https://www.aemedia.org/'],
+    ['手办吧','http://tieba.baidu.com/']
+  ],
+  fin: [
+    ['大麦理财','http://www.damailicai.com/'],
+    ['搜狗理财','http://fa.sogou.com/'],
+    ['懒财网','https://www.lancai.cn/index.html'],
+    ['抱财网','https://www.baocai.com/'],
+    ['小狗钱钱','http://www.xgqq.com/'],
+    ['中国理财网','https://www.chinawealth.com.cn/'],
+    ['易通贷','https://www.etongdai.com/']
+  ],
+  comp: [
+    ['天眼查','https://www.tianyancha.com/'],
+    ['企查查','https://www.qcc.com/'],
+    ['企查猫','https://www.qichamao.com/']
+  ],
+  job: [
+    ['猎聘网','https://www.liepin.com/'],
+    ['赶集网','https://passport.58.com/v2/login?isredirect=true&source=58-ganji-pc&path=https%3A%2F%2Fganji.com'],
+    ['前程无忧','http://www.51job.com/'],
+    ['中华英才','http://www.chinahr.com/'],
+    ['智联招聘','http://www.zhaopin.com/'],
+    ['58同城','https://ty.58.com/'],
+    ['应届生求职','http://www.yingjiesheng.com/']
+  ],
+  lif: [
+    ['生活网','http://www.shw365.com/'],
+    ['城市生活网','http://www.iecity.com/'],
+    ['连手网','https://lshou.com/'],
+    ['百姓网','https://baixing.com/'],
+    ['本来生活网','https://www.benlai.com/'],
+    ['中华生活网','http://www.369518.com/'],
+    ['生活服务网','https://shenghuo.huangye88.com/']
+  ],
+  traffic: [
+    ['12306','https://www.12306.cn/'],
+    ['携程','https://www.ctrip.com/'],
+    ['飞猪','https://www.fliggy.com/'],
+    ['8684公交查询','https://www.8684.cn/'],
+    ['8684地铁查询网','https://dt.8684.cn/'],
+    ['图吧公交','https://bus.mapbar.com/'],
+    ['图吧地铁','https://ditie.mapbar.com/']
+  ],
+  buy: [
+    ['淘宝','https://www.taobao.com/'],
+    ['天猫','https://www.tmall.com/'],
+    ['苏宁易购','https://www.suning.com/'],
+    ['亚马逊','https://www.amazon.cn/'],
+    ['唯品会','http://www.vip.com/'],
+    ['京东','http://www.jd.com/'],
+    ['聚美优品','http://bj.jumei.com/']
+  ],
+  exp: [
+    ['快递100','https://www.kuaidi100.com/'],
+    ['顺丰','https://www.sf-express.com/'],
+    ['EMS','https://www.ems.com.cn/'],
+    ['韵达','https://www.yundaex.com/'],
+    ['申通','https://www.sto.cn/'],
+    ['圆通','https://www.kuaidi100.com/all/yt.shtml'],
+    ['爱查快递','https://www.ickd.cn/']
+  ],
+  mail: [
+    ['163邮箱','http://mail.163.com/'],
+    ['tom邮箱','http://web.mail.tom.com/webmail/login/index.action'],
+    ['新浪邮箱','http://mail.sina.com.cn/'],
+    ['126邮箱','http://www.126.com/'],
+    ['QQ邮箱','https://mail.qq.com/'],
+    ['188财富邮','https://www.188.com/']
+  ],
+  weird: [
+    ['无用的网站','https://theuselessweb.com/'],
+    ['纪妖','https://www.cbaigui.com/'],
+    ['吃什么','https://chishenme.xyz/'],
+    ['时光邮局','https://www.hi2future.com/'],
+    ['幻觉生成','https://strobe.cool/'],
+    ['云段子','https://www.yduanzi.com/'],
+    ['好好说话','https://lab.magiconch.com/nbnhhsh/']
+  ],
+  ball: [
+    ['足球','https://www.dyjw.com/matches']
+  ],
+  lot: [
+    ['新浪彩票','https://lottery.sina.com.cn/'],
+    ['双色球历史','https://kaijiang.zhcw.com/zhcw/html/ssq/list.html'],
+    ['彩票查询','https://caipiao.ip138.com/'],
+    ['中彩网','https://www.zhcw.com/']
+  ],
+  car: [
+    ['太平洋汽车','https://price.pcauto.com.cn/'],
+    ['汽车之家','https://www.autohome.com.cn/hechi/'],
+    ['易车','https://www.yiche.com/'],
+    ['搜狐汽车网','https://db.auto.sohu.com/home/?spm=smpc.home.top-nav.17.1555312357871pGAAq77'],
+    ['爱卡汽车网','https://www.xcar.com.cn/']
+  ]
+};
+/* ===== 分类定义 =====
+   格式：[显示名, 分类id]
+   新增分类：在这里加一行，再在下方 SITES 里加一个同名数组即可。
+*/
+var CATS = [
+  ['搜索','search'], 
+  ['翻译','trans'],
+  ['其他','other'],
+  ['AI','ai'],
+  ['工具','util'],
+  ['直播','live'],
+  ['游戏','games'],
+  ['模拟器','simu'],
+  ['视频','vid'],
+  ['服务器','server'],
+  ['域名模板','domain'],
+  ['音乐','mus'],
+  ['网盘','pan'],
+  ['小说','novel'],
+  ['新闻资讯','newsd'],
+  ['漫画','comic'],
+  ['下载','down'],
+  ['字幕','sub'],
+  ['APP','app'],
+  ['加速','vpn'],
+  ['装机','pc'],
+  ['字体','font'],
+  ['博客','blog'],
+  ['导航','daohang'],
+  ['论坛','forum'],
+  ['图册','album'],
+  ['图画','pic'],
+  ['学习','learn'],
+  ['图书馆','lib'],
+  ['文库','wenku'],
+  ['COS','cos'],
+  ['手办','figure'],
+  ['理财','fin'],
+  ['企业查询','comp'],
+  ['求职','job'],
+  ['生活','lif'],
+  ['交通','traffic'],
+  ['购物','buy'],
+  ['快递查询','exp'],
+  ['邮箱','mail'],
+  ['奇怪的网站','weird'],
+  ['体育','ball'],
+  ['彩票','lot'],
+  ['汽车','car']
 ];
 
-/* ===== 渲染大图标一排 ===== */
-document.getElementById('iconRow').innerHTML = ICONS.map(([n,url,img])=>
-  `<li class="project"><a href="${url}" target="_blank"><img src="${img}" alt="${n}"><div class="title"><span>${n}</span></div></a></li>`
-).join('');
+/* ===== 网站条目工具（兼容 [名称,网址,颜色] 与 {n,u,c} 两种写法） ===== */
+var PALETTE=['#B5402B','#2932E1','#007722','#0E86F8','#D96B2B','#7A3EB5','#006C9E'];
+function nm(s){return Array.isArray(s)?s[0]:s.n;}
+function ur(s){return Array.isArray(s)?s[1]:s.u;}
+function co(s){return (Array.isArray(s)?s[2]:s.c)||pickColor(s);}
+function pickColor(s){
+  var str=nm(s),h=0,i;
+  for(i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))>>>0;
+  return PALETTE[h%PALETTE.length];
+}
+function addSite(cat,site){SITES[cat]=SITES[cat]||[];SITES[cat].push(site);}
+/* 添加网站示例：addSite('nav',['小红书','https://www.xiaohongshu.com']); */
 
-/* ===== 渲染分类卡片 ===== */
-document.getElementById('cats').innerHTML = DATA.map(c=>
-  `<div class="cat-box">
-     <span class="tag tag-${c.color}">${c.cat}</span>
-     <div class="cat-links">${c.links.map(([n,u])=>`<a href="${u}" target="_blank">${n}</a>`).join('')}</div>
-   </div>`
-).join('');
+/* ===== 状态 ===== */
+var state = {engine:'baidu', cat:'search', expand:false};
 
-/* ===== 樱花飘落 ===== */
-(function(){
-  const cv=document.getElementById('sakura'),cx=cv.getContext('2d');
-  let W,H,P=[];
-  function r(){W=cv.width=innerWidth;H=cv.height=innerHeight;}r();addEventListener('resize',r);
-  for(let i=0;i<36;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*6+4,
-    vx:Math.random()*.8-.4,vy:Math.random()*.9+.5,rot:Math.random()*6.28,vr:(Math.random()-.5)*.03,
-    o:Math.random()*.45+.35,pink:Math.random()<.5});
-  (function loop(){
-    cx.clearRect(0,0,W,H);
-    P.forEach(p=>{
-      p.y+=p.vy;p.x+=p.vx+Math.sin(p.y*.012)*.4;p.rot+=p.vr;
-      if(p.y>H+20){p.y=-20;p.x=Math.random()*W;}
-      cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);
-      cx.beginPath();cx.ellipse(0,0,p.r,p.r*.62,0,0,6.28);
-      cx.fillStyle=p.pink?`rgba(255,158,199,${p.o})`:`rgba(255,205,225,${p.o})`;
-      cx.fill();cx.restore();
-    });
-    requestAnimationFrame(loop);
-  })();
-})();
+/* ===== 工具 ===== */
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s).replace(/[&<>"']/g,function(m){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
+var toastTimer;
+function toast(msg){
+  var t=$('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('show');},1800);
+}
+
+/* ===== 渲染：搜索引擎 ===== */
+function renderEngines(){
+  $('engines').innerHTML = ENGINES.map(function(e){
+    return '<button type="button" class="engine'+(e.id===state.engine?' active':'')+'" data-id="'+e.id+'">'+e.name+'</button>';
+  }).join('');
+}
+$('engines').addEventListener('click',function(ev){
+  var b=ev.target.closest('.engine');if(!b)return;
+  state.engine=b.dataset.id;renderEngines();$('searchInput').focus();
+});
+
+/* ===== 渲染：分类标签 ===== */
+function renderTabs(){
+  $('tabs').innerHTML=CATS.map(function(c){
+    return '<button type="button" class="tab'+(c[1]===state.cat&&!state.expand?' active':'')+'" data-id="'+c[1]+'">'+c[0]+'</button>';
+  }).join('')+'<button type="button" class="tab tab-expand'+(state.expand?' active':'')+'" data-id="__expand">'+(state.expand?'收起':'展开全部')+'</button>';
+}
+$('tabs').addEventListener('click',function(ev){
+  var b=ev.target.closest('.tab');if(!b)return;
+  if(b.dataset.id==='__expand'){state.expand=!state.expand;}
+  else{state.cat=b.dataset.id;state.expand=false;}
+  renderTabs();renderGrid();
+});
+
+/* ===== 渲染：网站卡片 ===== */
+function renderGrid(){
+  var g=$('grid');
+  if(state.expand){
+    g.className='grid expanded';
+    g.innerHTML=CATS.map(function(cat){
+      var list=SITES[cat[1]]||[];
+      if(!list.length)return '';
+      return '<div class="cat-section">'
+        +'<div class="cat-title">'+cat[0]+'</div>'
+        +'<div class="cat-links">'
+        +list.map(function(s){return '<a class="site site-sm" href="'+esc(ur(s))+'" target="_blank" rel="noopener">'+esc(nm(s))+'</a>';}).join('')
+        +'</div></div>';
+    }).join('');
+  }else{
+    g.className='grid';
+    var list=SITES[state.cat]||[];
+    g.innerHTML=list.map(function(s){
+      return '<a class="site" href="'+esc(ur(s))+'" target="_blank" rel="noopener">'+esc(nm(s))+'</a>';
+    }).join('');
+  }
+}
+
+/* ===== 搜索提交 ===== */
+$('searchForm').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var q=$('searchInput').value.trim();
+  if(!q){$('searchInput').focus();return;}
+  var eng=ENGINES.filter(function(e){return e.id===state.engine;})[0];
+  window.open(eng.url+encodeURIComponent(q),'_blank','noopener');
+});
+
+/* ===== 时钟与问候 ===== */
+var WEEK=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+function pad(x){return (x<10?'0':'')+x;}
+
+/* ===== 农历 ===== */
+var LUNAR_INFO=[
+  0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
+  0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
+  0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
+  0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
+  0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
+  0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
+  0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
+  0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
+  0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
+  0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,
+  0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
+  0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
+  0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,
+  0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,
+  0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,
+  0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06b20,0x1a6c4,0x0aae0,
+  0x092e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,
+  0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,
+  0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
+  0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
+  0x0d520
+];
+var LUNAR_MONTH=['正','二','三','四','五','六','七','八','九','十','冬','腊'];
+var LUNAR_DAY=['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+  '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+  '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+var STEM=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+var BRANCH=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+function lunarYearDays(y){
+  var i,sum=348;
+  for(i=0x8000;i>0x8;i>>=1)sum+=(LUNAR_INFO[y-1900]&i)?1:0;
+  return sum+lunarLeapDays(y);
+}
+function lunarLeapMonth(y){return LUNAR_INFO[y-1900]&0xf;}
+function lunarLeapDays(y){
+  if(!lunarLeapMonth(y))return 0;
+  return (LUNAR_INFO[y-1900]&0x10000)?30:29;
+}
+function lunarMonthDays(y,m){return (LUNAR_INFO[y-1900]&(0x10000>>m))?30:29;}
+function solar2lunar(y,m,d){
+  var base=Date.UTC(1900,0,31),cur=Date.UTC(y,m-1,d);
+  var offset=Math.floor((cur-base)/86400000);
+  var i,temp=0;
+  for(i=1900;i<2101&&offset>0;i++){temp=lunarYearDays(i);offset-=temp;}
+  if(offset<0){offset+=temp;i--;}
+  var year=i,leap=lunarLeapMonth(year),isLeap=false;
+  for(i=1;i<13&&offset>0;i++){
+    if(leap>0&&i===(leap+1)&&!isLeap){i--;isLeap=true;temp=lunarLeapDays(year);}
+    else{temp=lunarMonthDays(year,i);}
+    if(isLeap&&i===(leap+1))isLeap=false;
+    offset-=temp;
+  }
+  if(offset===0&&leap>0&&i===(leap+1)){
+    if(isLeap)isLeap=false;else{isLeap=true;i--;}
+  }
+  if(offset<0){offset+=temp;i--;}
+  return {year:year,month:i,day:offset+1,leap:isLeap};
+}
+function lunarText(){
+  var d=new Date();
+  var l=solar2lunar(d.getFullYear(),d.getMonth()+1,d.getDate());
+  var gz=STEM[(l.year-4)%10]+BRANCH[(l.year-4)%12];
+  return '农历'+gz+'年 '+(l.leap?'闰':'')+LUNAR_MONTH[l.month-1]+'月'+LUNAR_DAY[l.day-1];
+}
+
+function tick(){
+  var d=new Date();
+  $('time').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+  $('date').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · '+WEEK[d.getDay()];
+  $('lunar').textContent=lunarText();
+  var h=d.getHours(),g,sub;
+  if(h>=5&&h<11){g='早上好';sub='新的一天，从一个清晰的起点开始';}
+  else if(h>=11&&h<14){g='中午好';sub='午后稍歇，也别忘了喝水';}
+  else if(h>=14&&h<18){g='下午好';sub='保持专注，一次只做一件事';}
+  else if(h>=18&&h<23){g='晚上好';sub='夜色正好，浏览之余注意休息';}
+  else{g='夜深了';sub='早点休息，明天再继续';}
+  $('greet').textContent=g;
+  $('greetSub').textContent=sub;
+}
+tick();setInterval(tick,1000);
+
+/* ===== 快捷键 ===== */
+document.addEventListener('keydown',function(ev){
+  var tag=(document.activeElement.tagName||'').toLowerCase();
+  if(ev.key==='/'&&tag!=='input'&&tag!=='textarea'){ev.preventDefault();$('searchInput').focus();}
+});
+
+/* ===== 花瓣飘落 ===== */
+function petals(){
+  var layer=document.createElement('div');layer.className='petal-layer';
+  var colors=['rgba(255,255,255,.85)','rgba(255,214,214,.8)','rgba(255,238,214,.8)','rgba(226,224,255,.75)'];
+  var i,p,sz;
+  for(i=0;i<16;i++){
+    p=document.createElement('span');p.className='petal';
+    sz=6+Math.random()*10;
+    p.style.cssText='left:'+(Math.random()*100).toFixed(2)+'vw;width:'+sz.toFixed(1)+'px;height:'+sz.toFixed(1)+'px;'
+      +'background:'+colors[i%colors.length]+';'
+      +'animation-duration:'+(7+Math.random()*8).toFixed(1)+'s;'
+      +'animation-delay:'+(-Math.random()*15).toFixed(1)+'s;'
+      +'--drift:'+((Math.random()*10)-5).toFixed(1)+'vw;';
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+}
+
+/* ===== 初始渲染 ===== */
+renderEngines();renderTabs();renderGrid();petals();
+
 </script>
 </body>
 </html>
