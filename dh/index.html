@@ -130,10 +130,70 @@
   .search-btn:hover{filter:brightness(1.08);}
 
   .actions{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+  .cal-wrap{position:relative;}
   .clock{
     font-family:var(--font-mono); font-size:12.5px; color:var(--muted);
-    padding-right:6px; white-space:nowrap;
+    padding-right:6px; white-space:nowrap; cursor:pointer;
+    border-radius:8px; transition:color .15s ease;
   }
+  .clock:hover{color:var(--accent);}
+
+  /* ---------- 日历面板 ---------- */
+  .cal-panel{
+    position:absolute; right:0; top:calc(100% + 10px);
+    width:264px;
+    background:var(--card); border:1px solid var(--border-strong); border-radius:12px;
+    box-shadow:var(--shadow); padding:13px 14px 10px; z-index:40;
+  }
+  .cal-panel[hidden]{display:none;}
+  .cal-head{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:8px;
+  }
+  .cal-title{
+    font-family:var(--font-display); font-size:14.5px; font-weight:700;
+    letter-spacing:.03em;
+  }
+  .cal-nav{display:flex; gap:4px;}
+  .cal-nav button, .cal-today{
+    font:inherit; font-size:12px; cursor:pointer;
+    border:1px solid var(--border); border-radius:7px;
+    background:var(--bg-soft); color:var(--muted);
+    padding:3px 9px; line-height:1.4;
+    transition:all .15s ease;
+  }
+  .cal-nav button{padding:3px 8px;}
+  .cal-nav button:hover, .cal-today:hover{color:var(--accent); border-color:var(--accent);}
+  .cal{width:100%; border-collapse:collapse; table-layout:fixed;}
+  .cal th{
+    font-size:10.5px; font-weight:500; color:var(--faint);
+    letter-spacing:.06em; padding:2px 0 6px;
+  }
+  .cal th.we{color:var(--accent); opacity:.75;}
+  .cal td{text-align:center; padding:1px;}
+  .cal td span{
+    display:grid; place-items:center;
+    width:28px; height:28px; border-radius:8px;
+    font-size:12.5px; color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .cal td.we span{color:var(--accent);}
+  .cal td.dim span{color:var(--faint); opacity:.5;}
+  .cal td.today span{
+    background:var(--accent); color:#fff; font-weight:700;
+  }
+  .cal-foot{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:8px; padding-top:8px;
+    border-top:1px solid var(--border);
+    font-size:11.5px; color:var(--muted);
+  }
+  .cal-ext{
+    font-size:11.5px; color:var(--muted); text-decoration:none;
+    border:1px solid var(--border); border-radius:6px; padding:2px 8px;
+    transition:all .15s ease; white-space:nowrap;
+  }
+  .cal-ext:hover{color:var(--accent); border-color:var(--accent);}
   .btn{
     font:inherit; font-size:13.5px; cursor:pointer;
     border:1px solid var(--border-strong); border-radius:9px;
@@ -259,11 +319,24 @@
   }
   .stats .dot{width:3px;height:3px;border-radius:50%;background:var(--faint);display:inline-block;margin:0 8px;vertical-align:middle;}
 
-  footer{
-    text-align:center; padding:0 20px 30px;
-    font-size:11.5px; color:var(--faint); letter-spacing:.04em;
+  /* ---------- 底部（友情链接 + 版权，样式沿用 index.html 并适配主题） ---------- */
+  .footer{max-width:1180px; margin:0 auto; padding:6px 28px 30px;}
+  .footer .link{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px; padding:16px 20px;
   }
-  footer .k{font-family:var(--font-mono);}
+  .footer .linktop{
+    font-size:13.5px; color:var(--ink); font-weight:600;
+    padding-bottom:10px; border-bottom:1px solid var(--border);
+  }
+  .footer .flinks{display:flex; flex-wrap:wrap; gap:6px 22px; padding-top:12px;}
+  .footer .flinks a{font-size:13px; color:var(--muted); text-decoration:none; transition:color .15s ease;}
+  .footer .flinks a:hover{color:var(--accent);}
+  .footer .flinks .none{font-size:12.5px; color:var(--faint);}
+  .footer p{text-align:center;color:var(--faint);font-size:12px;margin-top:14px;line-height:1.8;}
+  .footer p a{color:var(--muted);text-decoration:none;}
+  .footer p a:hover{color:var(--accent);}
 
   /* ---------- 弹窗 ---------- */
   dialog{
@@ -367,6 +440,22 @@
   }
   .toast.show{opacity:1; transform:translate(-50%, 0);}
 
+  /* ---------- 回到顶部 ---------- */
+  .totop{
+    position:fixed; right:max(20px, calc(50% - 634px)); bottom:26px; z-index:40;
+    width:42px; height:42px; border-radius:12px;
+    display:grid; place-items:center;
+    font-size:17px; cursor:pointer;
+    background:var(--card); color:var(--muted);
+    border:1px solid var(--border-strong);
+    box-shadow:var(--shadow);
+    opacity:0; visibility:hidden; transform:translateY(8px);
+    transition:opacity .25s ease, transform .25s ease, visibility .25s,
+               color .18s ease, border-color .18s ease;
+  }
+  .totop.show{opacity:1; visibility:visible; transform:translateY(0);}
+  .totop:hover{color:var(--accent); border-color:var(--accent); transform:translateY(-2px);}
+
   /* ---------- 季节特效层 ---------- */
   #fx{
     position:fixed; inset:0; z-index:1;
@@ -383,7 +472,7 @@
     .top{padding:12px 16px 0; gap:10px;}
     .searchbar{padding:12px 16px 8px;}
     .wxbar{padding:0 16px 12px;}
-    .clock{display:none;}
+    .cal-wrap{display:none;}
     main{padding:20px 16px 8px;}
     .stats{padding:16px;}
     .grid{grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));}
@@ -408,7 +497,10 @@
     </span>
   </div>
   <div class="actions">
-    <span class="clock" id="clock"></span>
+    <span class="cal-wrap">
+      <span class="clock" id="clock" title="点击查看日历"></span>
+      <div class="cal-panel" id="calPanel" hidden></div>
+    </span>
     <button class="btn icon" id="seasonBtn" title="季节特效"></button>
     <span class="ap-wrap">
       <button class="btn icon" id="themeBtn" title="外观配色">◐</button>
@@ -438,11 +530,18 @@
   <span>本地文件 <span class="dot"></span> 数据保存在浏览器 localStorage</span>
 </div>
 
-<footer>
-  WalaguAoeu · 用 <span class="k">/</span> 快速聚焦搜索 · 点分类标签筛选站点
-</footer>
+<div class="footer">
+  <div class="link">
+    <div class="linktop"><span>友情链接</span></div>
+    <div class="flinks" id="flinks"></div>
+  </div>
+  <p>Copyright &copy; 2020 <a href="https://walaguaoeu.github.io/" target="_blank" rel="noopener">WalaguAoeu</a></p>
+  <p>哇啦咕 - Aoeu 私人专属上网导航</p>
+</div>
 
 <div class="toast" id="toast"></div>
+
+<button class="totop" id="toTop" type="button" title="回到顶部" aria-label="回到顶部">↑</button>
 
 <script>
 (function(){
@@ -1332,6 +1431,90 @@
   }
   tick(); setInterval(tick, 30000);
 
+  /* ---------- 日历面板 ---------- */
+  (function(){
+    var wrap = document.querySelector(".cal-wrap");
+    var clockEl = document.getElementById("clock");
+    var panel = document.getElementById("calPanel");
+    if(!wrap || !clockEl || !panel) return;
+    var today = new Date();
+    var viewY = today.getFullYear(), viewM = today.getMonth();
+    var WD = ["日","一","二","三","四","五","六"];
+
+    function build(){
+      var first = new Date(viewY, viewM, 1);
+      var startWd = first.getDay();
+      var days = new Date(viewY, viewM + 1, 0).getDate();
+      var prevDays = new Date(viewY, viewM, 0).getDate();
+      var t = new Date();
+      var isCurMonth = t.getFullYear() === viewY && t.getMonth() === viewM;
+
+      /* 生成格子序列：上月补位 + 本月 + 下月补位（凑满整行） */
+      var pm = viewM - 1, pmY = viewY; if(pm < 0){ pm = 11; pmY--; }
+      var nm = viewM + 1, nmY = viewY; if(nm > 11){ nm = 0; nmY++; }
+      var cells = [], i;
+      for(i = 0; i < startWd; i++) cells.push({ n: prevDays - startWd + i + 1, cls: "dim", y: pmY, m: pm, d: prevDays - startWd + i + 1 });
+      for(i = 1; i <= days; i++){
+        var cls = (c => (c === 0 || c === 6) ? "we" : "")((i + startWd - 1) % 7);
+        if(isCurMonth && i === t.getDate()) cls = "today";
+        cells.push({ n: i, cls: cls, y: viewY, m: viewM, d: i });
+      }
+      while(cells.length % 7 !== 0){
+        var nx = cells.length - startWd - days + 1;
+        cells.push({ n: nx, cls: "dim", y: nmY, m: nm, d: nx });
+      }
+
+      var rows = "";
+      for(i = 0; i < cells.length; i += 7){
+        rows += "<tr>";
+        for(var j = 0; j < 7; j++){
+          var c = cells[i + j];
+          rows += "<td class=\"" + c.cls + "\" data-y=\"" + c.y + "\" data-m=\"" + c.m + "\" data-d=\"" + c.d + "\"><span>" + c.n + "</span></td>";
+        }
+        rows += "</tr>";
+      }
+
+      var tlt = lunarText(t.getFullYear(), t.getMonth() + 1, t.getDate());
+      panel.innerHTML =
+        '<div class="cal-head">'
+        + '<span class="cal-title">' + viewY + " 年 " + (viewM + 1) + " 月</span>"
+        + '<span class="cal-nav">'
+        + '<button type="button" data-nav="-1" title="上一月">‹</button>'
+        + '<button type="button" data-nav="0" title="回到本月">今天</button>'
+        + '<button type="button" data-nav="1" title="下一月">›</button>'
+        + '</span></div>'
+        + '<table class="cal"><thead><tr>'
+        + '<th class="we">日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th class="we">六</th>'
+        + '</tr></thead><tbody>' + rows + '</tbody></table>'
+        + '<div class="cal-foot"><span>' + (tlt ? tlt.mon + tlt.dat : "") + '</span>'
+        + '<a class="cal-ext" href="https://www.baidu.com/s?wd=' + encodeURIComponent(viewY + "年" + (viewM + 1) + "月日历") + '" target="_blank" rel="noopener" title="在新标签页打开百度日历（节假日·宜忌）">百度日历 ↗</a></div>';
+    }
+    function open(){ panel.hidden = false; build(); }
+    function close(){ panel.hidden = true; }
+    clockEl.addEventListener("click", function(e){
+      e.stopPropagation();
+      panel.hidden ? open() : close();
+    });
+    panel.addEventListener("click", function(e){
+      e.stopPropagation();
+      var b = e.target.closest("button[data-nav]");
+      if(b){
+        var d = Number(b.dataset.nav);
+        if(d === 0){ var t = new Date(); viewY = t.getFullYear(); viewM = t.getMonth(); }
+        else { viewM += d; if(viewM < 0){ viewM = 11; viewY--; } if(viewM > 11){ viewM = 0; viewY++; } }
+        build();
+        return;
+      }
+      var td = e.target.closest("td[data-y]");
+      if(td){
+        var q = td.dataset.y + "年" + (Number(td.dataset.m) + 1) + "月" + td.dataset.d + "日 黄历";
+        window.open("https://www.baidu.com/s?wd=" + encodeURIComponent(q), "_blank", "noopener");
+      }
+    });
+    document.addEventListener("click", close);
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape") close(); });
+  })();
+
   /* ---------- toast ---------- */
   var toastEl = document.getElementById("toast");
   var toastTimer = null;
@@ -1341,6 +1524,23 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 2400);
   }
+
+  /* ---------- 回到顶部 ---------- */
+  (function(){
+    var btn = document.getElementById("toTop");
+    if(!btn) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var shown = false;
+    function toggle(){
+      var want = (window.scrollY || document.documentElement.scrollTop) > 320;
+      if(want !== shown){ shown = want; btn.classList.toggle("show", want); }
+    }
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+    btn.addEventListener("click", function(){
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    });
+  })();
 
   /* ---------- 四季特效 ---------- */
   (function(){
@@ -1627,8 +1827,24 @@
     size(); apply(); syncBtn();
   })();
 
+  /* ---------- 友情链接（对应 index.html 底部，可自行添加） ---------- */
+  var LS_FRIENDS = "nav.friends";
+  var FRIENDS = load(LS_FRIENDS, []);
+  function renderFriends(){
+    var el = document.getElementById("flinks");
+    if(!el) return;
+    if(!FRIENDS.length){
+      el.innerHTML = '<span class="none">暂无友情链接，可在脚本 FRIENDS 中添加，格式：[名称, 网址]</span>';
+      return;
+    }
+    el.innerHTML = FRIENDS.map(function(f){
+      return '<a href="' + esc(f[1]) + '" target="_blank" rel="noopener">' + esc(f[0]) + '</a>';
+    }).join("");
+  }
+
   renderEngines();
   render();
+  renderFriends();
 })();
 </script>
 </body>
