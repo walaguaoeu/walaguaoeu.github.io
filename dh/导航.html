@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WalaguAoeu · 个人导航</title>
+<link rel="icon" href="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/link.png" type="image/png">
+<link rel="shortcut icon" href="https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/tu/daohang/link.png" type="image/png">
+<style>
+  :root{
+    --bg:#ffffff; --bg-soft:#f6f6f6; --card:#fdfcf9;
+    --ink:#211d17; --muted:#77705f; --faint:#a59d8a;
+    --border:#e3ddcd; --border-strong:#cec6b1;
+    --accent:#c2452d; --accent-soft:#f3e0da;
+    --mark:#f5e3b8;
+    --fx-rgb:151,166,190;
+    --shadow:0 1px 2px rgba(40,32,16,.05), 0 8px 24px -12px rgba(40,32,16,.18);
+    --font-body:"Avenir Next","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+    --font-display:"Palatino Linotype",Palatino,"Songti SC","STSong","SimSun",Georgia,serif;
+    --font-mono:"Cascadia Code","JetBrains Mono",Consolas,"Courier New",monospace;
+    --t-teal-bg:#dcece8; --t-teal-ink:#0f6e60;
+    --t-rose-bg:#f7e3e6; --t-rose-ink:#b23f52;
+    --t-amber-bg:#f5ebd3; --t-amber-ink:#9c6b0d;
+    --t-blue-bg:#e2eaf6; --t-blue-ink:#2f62a8;
+    --t-violet-bg:#e9e5f6; --t-violet-ink:#5f4bb8;
+    --t-pink-bg:#f7e3ec; --t-pink-ink:#b13e77;
+  }
+  [data-theme="dark"]{
+    --bg:#151310; --bg-soft:#1b1814; --card:#201d17;
+    --ink:#ece7da; --muted:#9a927e; --faint:#6e6753;
+    --border:#2c2920; --border-strong:#3d382a;
+    --accent:#e2785c; --accent-soft:#3a2a22;
+    --mark:#4d4322;
+    --fx-rgb:226,231,240;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.55);
+    --t-teal-bg:#143532; --t-teal-ink:#5ec4b3;
+    --t-rose-bg:#3a1f24; --t-rose-ink:#ef93a3;
+    --t-amber-bg:#372c12; --t-amber-ink:#e5b45c;
+    --t-blue-bg:#1a2a3d; --t-blue-ink:#7fa9e8;
+    --t-violet-bg:#261f3a; --t-violet-ink:#a794e8;
+    --t-pink-bg:#381f2b; --t-pink-ink:#e593bd;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font-body);
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    transition:background .35s ease, color .35s ease;
+  }
+
+  /* ---------- 顶栏（含搜索行，整体吸顶） ---------- */
+  .topwrap{
+    position:sticky; top:0; z-index:10;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:saturate(1.2) blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .top{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:14px 28px 0;
+  }
+  .brand{display:flex; align-items:center; gap:11px; flex-shrink:0;}
+  .brand .mark{
+    width:36px; height:36px; border-radius:9px;
+    background:var(--ink); color:var(--bg);
+    display:grid; place-items:center;
+    font-family:var(--font-display); font-size:19px; font-weight:700;
+  }
+  .brand-name{line-height:1.15;}
+  .brand-name b{
+    display:block; font-family:var(--font-display);
+    font-size:17px; font-weight:700; letter-spacing:.04em;
+  }
+  .brand-name span{
+    display:block; font-size:10.5px; letter-spacing:.22em;
+    color:var(--faint); text-transform:uppercase; font-family:var(--font-mono);
+  }
+
+  /* ---------- 搜索区（顶栏下方居中，移植自 index.html） ---------- */
+  .searchbar{
+    display:flex; justify-content:center;
+    padding:14px 28px 12px;
+  }
+  .search-block{width:100%; max-width:760px; min-width:0;}
+
+  /* 分类标签行：网页搜索 / AI搜索 / 视频搜索 / 资料 */
+  .sb-tabs{
+    display:flex; justify-content:center;
+    overflow-x:auto; scrollbar-width:none;
+    margin-bottom:9px;
+  }
+  .sb-tabs::-webkit-scrollbar{display:none;}
+  .sb-tab{
+    flex-shrink:0; display:inline-flex; align-items:center; gap:6px;
+    font:inherit; font-size:13.5px; line-height:1; cursor:pointer;
+    border:1px solid transparent; background:transparent; color:var(--muted);
+    padding:7px 18px; margin:0 2px; border-radius:40px; white-space:nowrap;
+    transition:background .18s ease, color .18s ease;
+  }
+  .sb-tab svg{width:14px; height:14px; fill:currentColor;}
+  .sb-tab:hover{color:var(--ink);}
+  .sb-tab.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+
+  /* 输入框（按钮内嵌右侧） */
+  .sb-form{position:relative;}
+  .sb-input{
+    width:100%; font:inherit; font-size:14.5px; color:var(--ink);
+    background:var(--card); border:2px solid var(--accent); border-radius:12px;
+    padding:12px 62px 12px 18px; outline:none;
+    transition:box-shadow .18s ease;
+  }
+  .sb-input::placeholder{color:var(--faint);}
+  .sb-input:focus{box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);}
+  .sb-go{
+    position:absolute; top:50%; right:7px; transform:translateY(-50%);
+    width:42px; height:38px; border:0; border-radius:9px;
+    background:var(--accent); color:#fff; cursor:pointer;
+    display:grid; place-items:center; transition:filter .15s ease;
+  }
+  .sb-go:hover{filter:brightness(1.08);}
+  .sb-go svg{width:17px; height:17px; fill:currentColor;}
+
+  /* 引擎行：选中项为强调色文字 + 上方小三角 */
+  .sb-engines{
+    display:flex; justify-content:center;
+    overflow-x:auto; scrollbar-width:none;
+    padding-top:11px;
+  }
+  .sb-engines::-webkit-scrollbar{display:none;}
+  .sb-engine{
+    position:relative; flex-shrink:0;
+    font:inherit; font-size:13.5px; line-height:1; cursor:pointer;
+    border:0; background:transparent; color:var(--muted);
+    padding:5px 16px; margin:0 2px; white-space:nowrap; border-radius:8px;
+    transition:color .15s ease, background .15s ease;
+  }
+  .sb-engine:hover{color:var(--ink);}
+  .sb-engine.active{color:var(--accent); font-weight:600;}
+  .sb-engine.active::before{
+    content:""; position:absolute; left:50%; bottom:100%;
+    width:0; height:0; transform:translateX(-50%);
+    border:7px solid transparent; border-top-color:var(--accent);
+  }
+
+  /* ---------- 天气行（搜索栏下方居中） ---------- */
+  .wxbar{
+    display:flex; justify-content:center;
+    padding:0 28px 14px;
+    overflow:hidden; line-height:0;
+  }
+  .wxbar iframe{
+    border:none; width:400px; height:34px; display:block;
+    transform:scale(.92); transform-origin:center top;
+  }
+
+  .actions{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+  .cal-wrap{position:relative;}
+  .clock{
+    font-family:var(--font-mono); font-size:12.5px; color:var(--muted);
+    padding-right:6px; white-space:nowrap; cursor:pointer;
+    border-radius:8px; transition:color .15s ease;
+  }
+  .clock:hover{color:var(--accent);}
+
+  /* ---------- 日历面板 ---------- */
+  .cal-panel{
+    position:absolute; right:0; top:calc(100% + 10px);
+    width:264px;
+    background:var(--card); border:1px solid var(--border-strong); border-radius:12px;
+    box-shadow:var(--shadow); padding:13px 14px 10px; z-index:40;
+  }
+  .cal-panel[hidden]{display:none;}
+  .cal-head{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:8px;
+  }
+  .cal-title{
+    font-family:var(--font-display); font-size:14.5px; font-weight:700;
+    letter-spacing:.03em;
+  }
+  .cal-nav{display:flex; gap:4px;}
+  .cal-nav button, .cal-today{
+    font:inherit; font-size:12px; cursor:pointer;
+    border:1px solid var(--border); border-radius:7px;
+    background:var(--bg-soft); color:var(--muted);
+    padding:3px 9px; line-height:1.4;
+    transition:all .15s ease;
+  }
+  .cal-nav button{padding:3px 8px;}
+  .cal-nav button:hover, .cal-today:hover{color:var(--accent); border-color:var(--accent);}
+  .cal{width:100%; border-collapse:collapse; table-layout:fixed;}
+  .cal th{
+    font-size:10.5px; font-weight:500; color:var(--faint);
+    letter-spacing:.06em; padding:2px 0 6px;
+  }
+  .cal th.we{color:var(--accent); opacity:.75;}
+  .cal td{text-align:center; padding:1px;}
+  .cal td span{
+    display:grid; place-items:center;
+    width:28px; height:28px; border-radius:8px;
+    font-size:12.5px; color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .cal td.we span{color:var(--accent);}
+  .cal td.dim span{color:var(--faint); opacity:.5;}
+  .cal td.today span{
+    background:var(--accent); color:#fff; font-weight:700;
+  }
+  .cal-foot{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:8px; padding-top:8px;
+    border-top:1px solid var(--border);
+    font-size:11.5px; color:var(--muted);
+  }
+  .cal-ext{
+    font-size:11.5px; color:var(--muted); text-decoration:none;
+    border:1px solid var(--border); border-radius:6px; padding:2px 8px;
+    transition:all .15s ease; white-space:nowrap;
+  }
+  .cal-ext:hover{color:var(--accent); border-color:var(--accent);}
+  .btn{
+    font:inherit; font-size:13.5px; cursor:pointer;
+    border:1px solid var(--border-strong); border-radius:9px;
+    background:var(--card); color:var(--ink);
+    padding:8px 14px; transition:all .18s ease;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn:hover{border-color:var(--accent); color:var(--accent); transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+  .btn:focus-visible, .card:focus-visible, .chip:focus-visible{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+  .sb-input:focus-visible{outline:none;}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn.primary:hover{color:#fff; filter:brightness(1.08);}
+  .btn.icon{padding:8px 10px; font-size:15px;}
+
+  /* ---------- 主体 ---------- */
+  main{max-width:1180px; margin:0 auto; padding:26px 28px 8px;}
+
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
+  .chip{
+    font:inherit; font-size:13px; cursor:pointer;
+    border:1px solid var(--border); border-radius:999px;
+    background:var(--card); color:var(--muted);
+    padding:6px 14px; transition:all .18s ease;
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .chip:hover{border-color:var(--border-strong); color:var(--ink);}
+  .chip.on{
+    background:var(--ink); border-color:var(--ink); color:var(--bg);
+  }
+  .chip .n{
+    font-family:var(--font-mono); font-size:11px; opacity:.65;
+  }
+
+  /* 分类卡片框（移植自 index.html 的 card-xl：卡片头 + 卡片体） */
+  .cat-card{
+    margin-bottom:20px;
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; box-shadow:var(--shadow);
+    overflow:hidden; animation:rise .4s ease both;
+  }
+  .cat-head{
+    display:flex; align-items:center; gap:11px;
+    padding:14px 18px; border-bottom:1px solid var(--border);
+  }
+  .cat-head .ic{
+    width:29px; height:29px; border-radius:8px; flex-shrink:0;
+    background:color-mix(in srgb, var(--accent) 12%, transparent);
+    color:var(--accent); display:grid; place-items:center;
+  }
+  .cat-head .ic svg{width:15px; height:15px; fill:currentColor;}
+  .cat-head h2{
+    margin:0; font-family:var(--font-display); font-size:16px; font-weight:700;
+    letter-spacing:.04em; color:var(--ink);
+    display:flex; align-items:center; gap:9px;
+  }
+  .cat-head h2 .count{
+    font-family:var(--font-mono); font-size:11px; color:var(--faint); font-weight:400;
+  }
+  .cat-body{padding:15px 16px 16px;}
+  .cat-body .grid{
+    grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+  }
+
+  .grid{
+    display:grid; gap:11px;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .card{
+    display:flex; align-items:center; gap:12px;
+    background:var(--card); border:1px solid var(--border); border-radius:11px;
+    padding:13px 14px; text-decoration:none; color:inherit;
+    position:relative; overflow:hidden;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    animation:rise .4s ease both;
+    animation-delay:calc(var(--i, 0) * 22ms);
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow);
+    border-color:var(--border-strong);
+  }
+  .card::after{
+    display:none;
+  }
+
+  .mono{
+    width:42px; height:42px; border-radius:10px; flex-shrink:0;
+    display:grid; place-items:center;
+    font-family:var(--font-display); font-size:19px; font-weight:700;
+  }
+  .mono.teal{background:var(--t-teal-bg); color:var(--t-teal-ink);}
+  .mono.rose{background:var(--t-rose-bg); color:var(--t-rose-ink);}
+  .mono.amber{background:var(--t-amber-bg); color:var(--t-amber-ink);}
+  .mono.blue{background:var(--t-blue-bg); color:var(--t-blue-ink);}
+  .mono.violet{background:var(--t-violet-bg); color:var(--t-violet-ink);}
+  .mono.pink{background:var(--t-pink-bg); color:var(--t-pink-ink);}
+  .fav{
+    width:42px; height:42px; border-radius:10px; flex-shrink:0;
+    object-fit:cover; display:block; background:var(--bg-soft);
+  }
+
+  .card-body{display:flex; flex-direction:column; gap:2px; min-width:0; flex:1;}
+  .card-name{
+    font-size:14.5px; font-weight:600; letter-spacing:.01em;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .card-desc{
+    font-size:12px; color:var(--muted);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .card-url{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--faint);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  mark{background:var(--mark); color:inherit; border-radius:3px; padding:0 1px;}
+
+  .empty{
+    text-align:center; padding:70px 20px; color:var(--faint);
+  }
+  .empty b{
+    display:block; font-family:var(--font-display); font-size:20px;
+    color:var(--muted); margin-bottom:10px;
+  }
+  .empty span{font-size:13.5px;}
+
+  .stats{
+    max-width:1180px; margin:0 auto;
+    padding:18px 28px 34px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:12px; color:var(--faint);
+    border-top:1px solid var(--border);
+  }
+  .stats .dot{width:3px;height:3px;border-radius:50%;background:var(--faint);display:inline-block;margin:0 8px;vertical-align:middle;}
+
+  /* ---------- 底部（友情链接 + 版权，样式沿用 index.html 并适配主题） ---------- */
+  .footer{max-width:1180px; margin:0 auto; padding:6px 28px 30px;}
+  .footer .link{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px; padding:16px 20px;
+  }
+  .footer .linktop{
+    font-size:13.5px; color:var(--ink); font-weight:600;
+    padding-bottom:10px; border-bottom:1px solid var(--border);
+  }
+  .footer .flinks{display:flex; flex-wrap:wrap; gap:6px 22px; padding-top:12px;}
+  .footer .flinks a{font-size:13px; color:var(--muted); text-decoration:none; transition:color .15s ease;}
+  .footer .flinks a:hover{color:var(--accent);}
+  .footer .flinks .none{font-size:12.5px; color:var(--faint);}
+  .footer p{text-align:center;color:var(--faint);font-size:12px;margin-top:14px;line-height:1.8;}
+  .footer p a{color:var(--muted);text-decoration:none;}
+  .footer p a:hover{color:var(--accent);}
+
+  /* ---------- 弹窗 ---------- */
+  dialog{
+    border:1px solid var(--border-strong); border-radius:14px;
+    background:var(--bg); color:var(--ink);
+    padding:0; width:min(440px, calc(100vw - 40px));
+    box-shadow:var(--shadow);
+  }
+  dialog::backdrop{background:rgba(15,12,8,.45); backdrop-filter:blur(2px);}
+  .modal-head{
+    padding:18px 22px 0;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .modal-head h3{
+    font-family:var(--font-display); font-size:17px; font-weight:700;
+  }
+  .modal-head .x{
+    border:0; background:none; font-size:18px; cursor:pointer;
+    color:var(--faint); padding:4px 8px; border-radius:6px;
+  }
+  .modal-head .x:hover{color:var(--accent);}
+  .modal-body{padding:16px 22px 22px; display:grid; gap:13px;}
+  .field label{
+    display:block; font-size:12px; color:var(--muted);
+    margin-bottom:5px; letter-spacing:.03em;
+  }
+  .field input, .field select{
+    width:100%; font:inherit; font-size:14px;
+    color:var(--ink); background:var(--card);
+    border:1px solid var(--border); border-radius:9px;
+    padding:9px 12px; outline:none; transition:border-color .2s, box-shadow .2s;
+  }
+  .field input:focus, .field select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+  .newcat{display:none;}
+  .newcat.show{display:block;}
+  .modal-foot{
+    display:flex; justify-content:flex-end; gap:9px; margin-top:4px;
+  }
+
+  /* ---------- 外观配色面板 ---------- */
+  html{color-scheme:light;}
+  .ap-wrap{position:relative;}
+  .ap-panel{
+    position:absolute; right:0; top:calc(100% + 8px);
+    width:272px; max-width:calc(100vw - 28px);
+    background:var(--card); border:1px solid var(--border-strong); border-radius:12px;
+    box-shadow:var(--shadow); padding:14px; z-index:40;
+    display:grid; gap:9px;
+  }
+  .ap-panel[hidden]{display:none;}
+  .ap-seg{display:flex; gap:6px;}
+  .ap-seg .seg{
+    flex:1; font:inherit; font-size:12.5px; cursor:pointer;
+    border:1px solid var(--border); border-radius:8px;
+    background:var(--bg-soft); color:var(--muted);
+    padding:7px 4px; transition:all .15s ease; white-space:nowrap;
+  }
+  .ap-seg .seg:hover{color:var(--ink); border-color:var(--border-strong);}
+  .ap-seg .seg.on{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  .ap-title{font-size:11px; color:var(--faint); letter-spacing:.08em; margin-top:2px;}
+  .ap-preset{
+    display:flex; align-items:center; gap:9px; padding:6px 8px;
+    border:1px solid transparent; border-radius:9px; cursor:pointer;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .ap-preset:hover{background:var(--bg-soft);}
+  .ap-preset.on{border-color:var(--border-strong); background:var(--bg-soft);}
+  .ap-swatch{
+    width:16px; height:16px; border-radius:50%; flex-shrink:0;
+    background:var(--dot); border:1px solid rgba(0,0,0,.18);
+  }
+  .ap-name{font-size:13px; color:var(--ink); flex:1;}
+  .ap-acc{
+    width:26px; height:26px; padding:0; flex-shrink:0;
+    border:1px solid var(--border); border-radius:7px;
+    background:none; cursor:pointer;
+  }
+  .ap-acc::-webkit-color-swatch-wrapper{padding:2px;}
+  .ap-acc::-webkit-color-swatch{border:none; border-radius:4px;}
+  .ap-bg{display:flex; align-items:center; gap:9px; padding:2px 8px;}
+  .ap-hint{font-size:12px; color:var(--muted); flex:1;}
+  .ap-reset{
+    font:inherit; font-size:12.5px; cursor:pointer;
+    border:1px solid var(--border-strong); border-radius:8px;
+    background:var(--bg-soft); color:var(--muted);
+    padding:7px 10px; transition:all .15s ease;
+  }
+  .ap-reset:hover{color:var(--accent); border-color:var(--accent);}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed; bottom:28px; left:50%;
+    transform:translate(-50%, 12px);
+    background:var(--ink); color:var(--bg);
+    font-size:13px; padding:9px 18px; border-radius:999px;
+    opacity:0; pointer-events:none; transition:all .25s ease;
+    z-index:50; box-shadow:var(--shadow);
+  }
+  .toast.show{opacity:1; transform:translate(-50%, 0);}
+
+  /* ---------- 回到顶部 ---------- */
+  .totop{
+    position:fixed; right:max(20px, calc(50% - 634px)); bottom:26px; z-index:40;
+    width:42px; height:42px; border-radius:12px;
+    display:grid; place-items:center;
+    font-size:17px; cursor:pointer;
+    background:var(--card); color:var(--muted);
+    border:1px solid var(--border-strong);
+    box-shadow:var(--shadow);
+    opacity:0; visibility:hidden; transform:translateY(8px);
+    transition:opacity .25s ease, transform .25s ease, visibility .25s,
+               color .18s ease, border-color .18s ease;
+  }
+  .totop.show{opacity:1; visibility:visible; transform:translateY(0);}
+  .totop:hover{color:var(--accent); border-color:var(--accent); transform:translateY(-2px);}
+
+  /* ---------- 季节特效层 ---------- */
+  #fx{
+    position:fixed; inset:0; z-index:1;
+    width:100%; height:100%;
+    pointer-events:none;
+  }
+
+  @keyframes rise{
+    from{opacity:0; transform:translateY(7px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  @media (max-width:720px){
+    .top{padding:12px 16px 0; gap:10px;}
+    .searchbar{padding:12px 16px 8px;}
+    .sb-tabs{margin-bottom:7px;}
+    .sb-tab{font-size:12.5px; padding:6px 13px;}
+    .sb-input{font-size:13.5px; padding:11px 56px 11px 15px;}
+    .sb-engine{font-size:12.5px; padding:4px 11px;}
+    .wxbar{padding:0 16px 12px;}
+    .cal-wrap{display:none;}
+    main{padding:20px 16px 8px;}
+    .stats{padding:16px;}
+    .grid{grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<div class="topwrap">
+<header class="top">
+  <div class="brand">
+    <span class="mark">哇</span>
+    <span class="brand-name">
+      <b>哇啦咕</b>
+      <span>Walagu Aoeu</span>
+    </span>
+  </div>
+  <div class="actions">
+    <span class="cal-wrap">
+      <span class="clock" id="clock" title="点击查看日历"></span>
+      <div class="cal-panel" id="calPanel" hidden></div>
+    </span>
+    <button class="btn icon" id="seasonBtn" title="季节特效"></button>
+    <span class="ap-wrap">
+      <button class="btn icon" id="themeBtn" title="外观配色">◐</button>
+    </span>
+  </div>
+</header>
+
+<div class="searchbar">
+  <div class="search-block" id="searchBlock">
+    <div class="sb-tabs" id="sbTabs" role="tablist" aria-label="搜索分类"></div>
+    <form class="sb-form" id="searchForm" autocomplete="off">
+      <input class="sb-input" id="search" type="text" placeholder="请输入搜索关键词并按回车键…" aria-label="搜索关键词">
+      <button type="submit" class="sb-go" id="searchGo" aria-label="提交搜索">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 1 0 5.29 14.03l4.34 4.34 1.42-1.42-4.34-4.34A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg>
+      </button>
+    </form>
+    <div class="sb-engines" id="sbEngines" role="tablist" aria-label="搜索引擎"></div>
+  </div>
+</div>
+<div class="wxbar">
+  <iframe id="weatherFrame" src="https://i.tianqi.com/index.php?c=code&id=40&color=%2377705f" scrolling="no" title="天气" loading="lazy"></iframe>
+</div>
+</div>
+
+<main>
+  <nav class="chips" id="chips" aria-label="分类筛选"></nav>
+  <div id="sections"></div>
+</main>
+
+<div class="stats">
+  <span id="statText"></span>
+  <span>本地文件 <span class="dot"></span> 数据保存在浏览器 localStorage</span>
+</div>
+
+<div class="footer">
+  <div class="link">
+    <div class="linktop"><span>友情链接</span></div>
+    <div class="flinks" id="flinks"></div>
+  </div>
+  <p>Copyright &copy; 2020 <a href="https://walaguaoeu.github.io/" target="_blank" rel="noopener">WalaguAoeu</a></p>
+  <p>哇啦咕 - Aoeu 私人专属上网导航</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<button class="totop" id="toTop" type="button" title="回到顶部" aria-label="回到顶部">↑</button>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 数据 ---------- */
+  var BUILTIN = [
+    {cat:"ACG", name:"哔哩哔哩弹幕视频网", url:"http://www.bilibili.com/"},
+    {cat:"ACG", name:"AcFun弹幕视频网", url:"http://www.acfun.tv/"},
+    {cat:"ACG", name:"ニコニコ動画", url:"http://www.nicovideo.jp/"},
+    {cat:"ACG", name:"半次元", url:"http://bcy.net/"},
+    {cat:"ACG", name:"pixiv", url:"http://www.pixiv.net/"},
+    {cat:"ACG", name:"萌否电台", url:"http://moe.fm/"},
+    {cat:"ACG", name:"萌娘百科", url:"http://zh.moegirl.org/Mainpage"},
+    {cat:"ACG", name:"Bangumi 番组计划", url:"http://bangumi.tv/"},
+    {cat:"ACG", name:"Nyato喵特漫展", url:"http://nyato.com/"},
+    {cat:"ACG", name:"新浪微博", url:"http://www.weibo.com/"},
+    {cat:"ACG", name:"百度贴吧", url:"http://tieba.baidu.com/"},
+    {cat:"搜索", name:"谷歌搜索", url:"https://www.google.com/"},
+    {cat:"搜索", name:"搜狗搜索", url:"https://www.sogou.com/"},
+    {cat:"搜索", name:"必应搜索", url:"https://cn.bing.com/"},
+    {cat:"搜索", name:"知乎", url:"https://www.zhihu.com/"},
+    {cat:"搜索", name:"Yandex", url:"https://yandex.com/"},
+    {cat:"搜索", name:"Yahoo", url:"https://yahoo.com/"},
+    {cat:"搜索", name:"Seznam", url:"https://www.seznam.cz/"},
+    {cat:"翻译", name:"百度翻译", url:"https://fanyi.baidu.com/"},
+    {cat:"翻译", name:"有道翻译", url:"https://fanyi.youdao.com/"},
+    {cat:"翻译", name:"翻译狗", url:"https://www.fanyigou.com/totran/tranText.html"},
+    {cat:"翻译", name:"搜狗翻译", url:"https://fanyi.sogou.com/text"},
+    {cat:"翻译", name:"彩云小译", url:"https://fanyi.caiyunapp.com/"},
+    {cat:"翻译", name:"腾讯翻译", url:"https://fanyi.qq.com/"},
+    {cat:"翻译", name:"CNKI翻译助手", url:"https://dict.cnki.net/index"},
+    {cat:"其他", name:"GitHub", url:"https://github.com/"},
+    {cat:"其他", name:"git加速下载", url:"https://gh-proxy.com/"},
+    {cat:"其他", name:"Gitee", url:"https://gitee.com/"},
+    {cat:"其他", name:"Cloudflare", url:"https://www.cloudflare-cn.com/"},
+    {cat:"其他", name:"jsDelivr", url:"https://www.jsdelivr.com/"},
+    {cat:"其他", name:"PyPI", url:"https://pypi.org/"},
+    {cat:"其他", name:"uptme", url:"https://uptimerobot.com/"},
+    {cat:"其他", name:"吾爱破解", url:"https://www.52pojie.cn/"},
+    {cat:"其他", name:"看雪安全", url:"https://bbs.pediy.com/"},
+    {cat:"其他", name:"精易论坛", url:"https://bbs.ijingyi.com/"},
+    {cat:"其他", name:"52汇编", url:"https://www.52hb.com/"},
+    {cat:"其他", name:"文本api", url:"https://textdb.online/"},
+    {cat:"其他", name:"剪贴板", url:"https://webnote.cc/walaguaoeu"},
+    {cat:"其他", name:"文心验证", url:"http://pro.1wxyun.com/"},
+    {cat:"其他", name:"Api", url:"https://api.pearktrue.cn/"},
+    {cat:"其他", name:"JSON", url:"https://www.json.cn/"},
+    {cat:"其他", name:"ipv6", url:"https://ip6.ro/"},
+    {cat:"AI", name:"秘塔", url:"https://metaso.cn/"},
+    {cat:"AI", name:"腾讯元宝", url:"https://yuanbao.tencent.com/"},
+    {cat:"AI", name:"DeepSeek", url:"https://www.deepseek.com/"},
+    {cat:"AI", name:"豆包", url:"https://www.doubao.com/chat/"},
+    {cat:"AI", name:"即梦", url:"https://jimeng.jianying.com/"},
+    {cat:"AI", name:"通义万相", url:"https://tongyi.aliyun.com/wan/"},
+    {cat:"AI", name:"天工", url:"https://www.tiangong.cn/"},
+    {cat:"AI", name:"uTools", url:"https://www.u-tools.cn/index.html"},
+    {cat:"AI", name:"AI作图", url:"https://d.design/"},
+    {cat:"AI", name:"魔搭社区", url:"https://modelscope.cn/"},
+    {cat:"AI", name:"hermesagent", url:"https://desktop.hermesagent.org.cn/"},
+    {cat:"AI", name:"llama.cpp", url:"https://github.com/ggml-org/llama.cpp"},
+    {cat:"AI", name:"sufy cdn", url:"https://hf-cdn.sufy.com/"},
+    {cat:"AI", name:"HuggingFace", url:"https://huggingface.co/"},
+    {cat:"AI", name:"HuggingFace", url:"https://hf-mirror.com/"},
+    {cat:"工具", name:"火绒安全", url:"https://www.huorong.cn/"},
+    {cat:"工具", name:"vmware", url:"https://www.vmware.com/"},
+    {cat:"工具", name:"OBS", url:"https://obsproject.com/"},
+    {cat:"工具", name:"在线工具箱", url:"https://tool.lu/"},
+    {cat:"工具", name:"moo0", url:"https://zhs.moo0.com/"},
+    {cat:"工具", name:"小丸工具箱", url:"https://dl.hdslb.com/video-press/BiliBiliEncoder.zip"},
+    {cat:"工具", name:"latex公式编辑器", url:"https://www.latexlive.com/"},
+    {cat:"工具", name:"在线排版", url:"https://paiban.gaodun.com/"},
+    {cat:"工具", name:"在线PS", url:"https://www.tugaigai.com/online_ps/"},
+    {cat:"工具", name:"爱资料在线工具", url:"https://www.toolnb.com/"},
+    {cat:"工具", name:"稿定设计", url:"https://www.gaoding.com/?"},
+    {cat:"工具", name:"图片提取", url:"https://web.baimiaoapp.com/"},
+    {cat:"工具", name:"改图鸭", url:"https://www.gaituya.com/"},
+    {cat:"工具", name:"蒸汽机", url:"https://magiconch.com/vaporwave/"},
+    {cat:"工具", name:"短视频解析", url:"https://tools.liumingye.cn/"},
+    {cat:"工具", name:"图片压缩工具", url:"https://docsmall.com/image-compress"},
+    {cat:"工具", name:"在线压缩和转换", url:"https://www.onlineimagetool.com/zh/"},
+    {cat:"工具", name:"剪映", url:"https://www.capcut.cn/"},
+    {cat:"工具", name:"格式工厂", url:"https://www.pcfreetime.com/"},
+    {cat:"工具", name:"在线视频编辑", url:"https://www.apowersoft.cn/online-video-editor"},
+    {cat:"工具", name:"在线图片编辑", url:"https://ezgif.com/"},
+    {cat:"工具", name:"网页微信文件助手", url:"https://filehelper.weixin.qq.com/"},
+    {cat:"工具", name:"方方格子", url:"http://www.ffcell.com/"},
+    {cat:"工具", name:"方方注册", url:"https://gcore.jsdelivr.net/gh/walaguaoeu/ku@master/gj/%E6%96%B9%E6%96%B9%E6%B3%A8%E5%86%8C.zip"},
+    {cat:"工具", name:"维修教程站", url:"https://zh.ifixit.com/Guide"},
+    {cat:"工具", name:"以图搜索", url:"https://trace.moe/"},
+    {cat:"工具", name:"纸由我", url:"https://paperme.toolooz.com/"},
+    {cat:"工具", name:"一键抠图", url:"https://remove.photos/"},
+    {cat:"工具", name:"在线PDF处理", url:"https://docsmall.com/"},
+    {cat:"工具", name:"自由乐器", url:"https://www.autopiano.cn/"},
+    {cat:"工具", name:"完美解码", url:"https://jm.wmzhe.com/"},
+    {cat:"直播", name:"斗鱼", url:"https://www.douyu.com/"},
+    {cat:"直播", name:"虎牙", url:"https://www.huya.com/"},
+    {cat:"直播", name:"抖音", url:"https://www.douyin.com/"},
+    {cat:"直播", name:"CC", url:"https://cc.163.com/"},
+    {cat:"直播", name:"快手", url:"https://www.kuaishou.com/"},
+    {cat:"直播", name:"今日头条", url:"https://www.toutiao.com/"},
+    {cat:"直播", name:"小红书", url:"https://www.xiaohongshu.com/"},
+    {cat:"游戏", name:"Steam", url:"https://store.steampowered.com/about/"},
+    {cat:"游戏", name:"WeGame", url:"https://www.wegame.com.cn/home"},
+    {cat:"游戏", name:"Epic", url:"https://store.epicgames.com/zh-CN/"},
+    {cat:"游戏", name:"3DM GAME", url:"https://www.3dmgame.com/"},
+    {cat:"游戏", name:"育碧游戏", url:"https://zh-cn.ubisoft.com/"},
+    {cat:"游戏", name:"游明星空", url:"https://www.gamersky.com/"},
+    {cat:"游戏", name:"XUGAME", url:"https://www.xudanji.cn/"},
+    {cat:"游戏", name:"4399", url:"http://www.4399.com/"},
+    {cat:"游戏", name:"7k7k", url:"http://www.7k7k.com/"},
+    {cat:"游戏", name:"17173", url:"http://www.17173.com/"},
+    {cat:"游戏", name:"逗游", url:"http://www.doyo.cn/"},
+    {cat:"游戏", name:"游讯游戏网", url:"http://www.yxdown.com/"},
+    {cat:"游戏", name:"Yikm", url:"https://walaguaoeu.github.io/dh/www.yikm.net"},
+    {cat:"游戏", name:"网页红警", url:"https://game.gongheguozhihui.com/"},
+    {cat:"模拟器", name:"mumu模拟器", url:"https://mumu.163.com/"},
+    {cat:"模拟器", name:"雷电模拟器", url:"https://www.ldmnq.com/"},
+    {cat:"模拟器", name:"逍遥模拟器", url:"https://www.xyaz.cn/index2.html"},
+    {cat:"模拟器", name:"夜神模拟器", url:"https://www.yeshen.com/"},
+    {cat:"视频", name:"腾讯", url:"http://v.qq.com/"},
+    {cat:"视频", name:"爱奇艺", url:"http://www.iqiyi.com/"},
+    {cat:"视频", name:"优酷", url:"http://www.youku.com/"},
+    {cat:"视频", name:"搜狐", url:"http://tv.sohu.com/"},
+    {cat:"视频", name:"2345影视", url:"https://kan.2345.com/"},
+    {cat:"视频", name:"Youtube", url:"https://www.youtube.com/"},
+    {cat:"视频", name:"音范丝", url:"https://www.yinfans.me/"},
+    {cat:"视频", name:"电影天堂", url:"https://dygod.org/index.htm"},
+    {cat:"视频", name:"蓝光高清", url:"https://www.4k007.com/"},
+    {cat:"视频", name:"樱之空", url:"https://skr.skr2.cc:666/"},
+    {cat:"视频", name:"动漫", url:"http://www.yinghua8.tv/"},
+    {cat:"视频", name:"荐", url:"https://www.jianpian.com/"},
+    {cat:"视频", name:"视频解析", url:"https://www.baidu.com/s?wd=视频解析"},
+    {cat:"服务器", name:"雨云", url:"https://www.rainyun.com/"},
+    {cat:"服务器", name:"一诺", url:"https://www.enuoidc.com/"},
+    {cat:"服务器", name:"百度云", url:"https://cloud.baidu.com/"},
+    {cat:"服务器", name:"腾讯云", url:"https://cloud.tencent.com/"},
+    {cat:"服务器", name:"阿里云", url:"https://www.aliyun.com/"},
+    {cat:"服务器", name:"亿速云", url:"https://www.yisu.com/"},
+    {cat:"服务器", name:"火山引擎", url:"https://www.volcengine.com/"},
+    {cat:"服务器", name:"京东云", url:"https://www.jdcloud.com/"},
+    {cat:"服务器", name:"华为云", url:"https://www.huaweicloud.com/"},
+    {cat:"服务器", name:"亚马逊", url:"https://aws.amazon.com/"},
+    {cat:"服务器", name:"三丰云", url:"https://www.sanfengyun.com/"},
+    {cat:"服务器", name:"不大创造", url:"https://www.ipxr.cn/"},
+    {cat:"域名模板", name:"NameSilo", url:"https://www.namesilo.com/"},
+    {cat:"域名模板", name:"Namecheap", url:"https://www.namecheap.com/"},
+    {cat:"域名模板", name:"name", url:"https://www.name.com/zh-cn/"},
+    {cat:"域名模板", name:"DNSPod", url:"https://www.dnspod.cn/"},
+    {cat:"域名模板", name:"Typecho", url:"https://typecho.org/"},
+    {cat:"域名模板", name:"站长工具", url:"https://tool.chinaz.com/"},
+    {cat:"域名模板", name:"在线ping", url:"https://www.itdog.cn/"},
+    {cat:"域名模板", name:"缩短地址", url:"https://suo.im/"},
+    {cat:"域名模板", name:"模版之家", url:"https://sc.chinaz.com/moban/"},
+    {cat:"域名模板", name:"梦幻模版", url:"http://www.dreamtemplate.com/"},
+    {cat:"域名模板", name:"笨牛", url:"http://cdn.bnxb.com/"},
+    {cat:"域名模板", name:"数码资源网", url:"https://www.95262.com/smzy/DownList_1514_1.html"},
+    {cat:"域名模板", name:"友盟", url:"https://www.umeng.com/"},
+    {cat:"音乐", name:"QQ音乐", url:"http://music.baidu.com/"},
+    {cat:"音乐", name:"网易云音乐", url:"http://music.163.com/"},
+    {cat:"音乐", name:"虾米音乐", url:"https://conch.xiami.com/"},
+    {cat:"音乐", name:"酷我音乐", url:"http://www.kuwo.cn/"},
+    {cat:"音乐", name:"酷狗音乐", url:"http://www.kugou.com/"},
+    {cat:"音乐", name:"音悦台", url:"http://www.yinyuetai.com/"},
+    {cat:"音乐", name:"千千音乐", url:"https://music.91q.com/"},
+    {cat:"网盘", name:"百度网盘", url:"https://pan.baidu.com/"},
+    {cat:"网盘", name:"阿里云盘", url:"https://www.alipan.com/"},
+    {cat:"网盘", name:"夸克", url:"https://www.quark.cn/"},
+    {cat:"网盘", name:"日本无限", url:"https://infini-cloud.net/en/"},
+    {cat:"网盘", name:"UC网盘", url:"https://drive.uc.cn/"},
+    {cat:"网盘", name:"盘搜搜", url:"https://pansoso.com/"},
+    {cat:"网盘", name:"爱盘搜", url:"https://aipanso.com/"},
+    {cat:"网盘", name:"学霸盘", url:"https://www.xuebapan.com/"},
+    {cat:"网盘", name:"易搜", url:"https://yiso.eu.org/"},
+    {cat:"网盘", name:"猫狸盘搜", url:"https://www.alipansou.com/"},
+    {cat:"网盘", name:"热盘搜", url:"http://www.repanso.com/"},
+    {cat:"网盘", name:"Up云搜", url:"https://www.upyunso.com/"},
+    {cat:"网盘", name:"秒搜", url:"https://miaosou.fun/"},
+    {cat:"网盘", name:"资源搜", url:"https://www.zhongchuangwl.com/"},
+    {cat:"小说", name:"起点小说", url:"http://www.qidian.com/"},
+    {cat:"小说", name:"hao123小说", url:"http://www.hao123.com/book"},
+    {cat:"小说", name:"17k小说", url:"http://www.17k.com/"},
+    {cat:"小说", name:"花语书城", url:"http://huayu.baidu.com/"},
+    {cat:"小说", name:"纵横小说网", url:"http://www.zongheng.com/"},
+    {cat:"小说", name:"创世中文网", url:"http://chuangshi.qq.com/"},
+    {cat:"小说", name:"小说阅读网", url:"https://www.readnovel.com/"},
+    {cat:"小说", name:"番茄小说", url:"https://fanqienovel.com/"},
+    {cat:"小说", name:"飞卢小说", url:"https://www.faloo.com/"},
+    {cat:"小说", name:"爱下书", url:"http://www.aixiashu.la/"},
+    {cat:"新闻资讯", name:"新浪新闻", url:"http://news.sina.com.cn/"},
+    {cat:"新闻资讯", name:"腾讯新闻", url:"http://news.qq.com/"},
+    {cat:"新闻资讯", name:"凤凰新闻", url:"http://news.ifeng.com/"},
+    {cat:"新闻资讯", name:"东方头条", url:"https://mini.eastday.com/"},
+    {cat:"新闻资讯", name:"搜狐新闻", url:"http://news.sohu.com/"},
+    {cat:"新闻资讯", name:"人民网", url:"http://www.people.com.cn/"},
+    {cat:"新闻资讯", name:"中华网", url:"https://www.china.com/"},
+    {cat:"漫画", name:"极速漫画", url:"http://www.1kkk.com/"},
+    {cat:"漫画", name:"爱漫画", url:"http://imanhua.com/"},
+    {cat:"漫画", name:"久爱漫画", url:"http://www.92mh.cc/"},
+    {cat:"漫画", name:"吹妖动漫", url:"https://www.chuiyao.com/"},
+    {cat:"漫画", name:"动漫之家", url:"http://manhua.dmzj.com/"},
+    {cat:"漫画", name:"漫漫看", url:"http://www.manmankan.com/"},
+    {cat:"漫画", name:"有妖气", url:"http://www.u17.com/"},
+    {cat:"下载", name:"Skr", url:"https://skrbtpv.top/"},
+    {cat:"下载", name:"奇迹秀", url:"https://www.qijishow.com/down/index.html"},
+    {cat:"下载", name:"音乐魔石", url:"https://www.yym4.com/"},
+    {cat:"下载", name:"放屁音乐", url:"https://www.fangpi.net/"},
+    {cat:"下载", name:"好听轻音乐", url:"http://www.htqyy.com/"},
+    {cat:"下载", name:"无水印下载", url:"https://www.datatool.vip/zh"},
+    {cat:"下载", name:"SeedHub", url:"https://www.seedhub.cc/"},
+    {cat:"下载", name:"驱动之家", url:"http://www.mydrivers.com/"},
+    {cat:"下载", name:"天空软件", url:"http://www.skycn.com"},
+    {cat:"下载", name:"华军软件", url:"http://www.onlinedown.net/"},
+    {cat:"下载", name:"太平洋下载", url:"http://dl.pconline.com.cn/"},
+    {cat:"下载", name:"新浪下载", url:"https://digi.sina.com.cn/"},
+    {cat:"下载", name:"2345软件", url:"https://www.duote.com/"},
+    {cat:"下载", name:"ZOL下载", url:"https://xiazai.zol.com.cn/"},
+    {cat:"字幕", name:"字幕库", url:"http://www.zimuku.net/"},
+    {cat:"字幕", name:"163字幕", url:"http://www.163sub.com/"},
+    {cat:"字幕", name:"SubHD", url:"http://subhd.com/"},
+    {cat:"字幕", name:"字幕组", url:"http://www.zimuzu.tv/"},
+    {cat:"字幕", name:"第三楼字幕", url:"https://www.disanlou.org/"},
+    {cat:"字幕", name:"字幕下载网", url:"http://www.zmdown.com/"},
+    {cat:"字幕", name:"CG SUB", url:"http://www.cgsub.com/"},
+    {cat:"APP", name:"菜鸟应用", url:"http://www.cainiaoapp.cn/"},
+    {cat:"APP", name:"APP应用联盟", url:"http://www.appzg.org/"},
+    {cat:"APP", name:"应用汇", url:"https://www.appchina.com/"},
+    {cat:"APP", name:"三大哈网", url:"http://www.sandaha.com/app/"},
+    {cat:"APP", name:"齐家网", url:"https://www.jia.com/app/"},
+    {cat:"APP", name:"安卓网", url:"http://apk.hiapk.com/"},
+    {cat:"APP", name:"网侠手机站", url:"https://www.hackhome.com/"},
+    {cat:"加速", name:"豆奶", url:"https://dounai.pro/auth/login"},
+    {cat:"加速", name:"一元机场", url:"https://xn--4gq62f52gdss.xyz/"},
+    {cat:"加速", name:"v2ray免费账号", url:"https://shadowsocksr.org/"},
+    {cat:"加速", name:"翻墙机场", url:"https://xn--mest5a943ag8x.cc/"},
+    {cat:"加速", name:"免费上网", url:"https://clashgithub.com/category/freenode"},
+    {cat:"加速", name:"飞鸟云", url:"https://github.com/QWQorz/feiniaoyun"},
+    {cat:"加速", name:"飞鸟云", url:"https://github.com/jichangbaike/feiniaoyun"},
+    {cat:"装机", name:"CPU天梯图", url:"https://cpu.exprank.com/"},
+    {cat:"装机", name:"显卡天梯图", url:"https://gpu.exprank.com/"},
+    {cat:"装机", name:"刷新率检测", url:"https://www.testufo.com/"},
+    {cat:"装机", name:"屏幕检测", url:"https://screen.bmcx.com/"},
+    {cat:"装机", name:"测网速", url:"https://test.ustc.edu.cn/"},
+    {cat:"装机", name:"键盘检测", url:"https://www.zfrontier.com/lab/keyboardTester"},
+    {cat:"装机", name:"鼠标测试", url:"https://www.mousetester.cn/"},
+    {cat:"装机", name:"手柄测试", url:"https://www.gobing.cn/experiment/key"},
+    {cat:"装机", name:"爱纯净", url:"https://www.aichunjing.com/"},
+    {cat:"装机", name:"系统之家", url:"https://www.xitongzhijia.com/"},
+    {cat:"装机", name:"高清壁纸", url:"https://haowallpaper.com/"},
+    {cat:"装机", name:"bulidcores 3dpc", url:"https://buildcores.com/"},
+    {cat:"装机", name:"图吧工具箱", url:"https://www.tbtool.cn/"},
+    {cat:"字体", name:"展哥收集", url:"https://flowus.cn/thelaws/share/12828fe3-8806-4350-bfbe-4fc1d032e5db#888c5596-dbbc-4cdb-be31-d72266a4a111"},
+    {cat:"字体", name:"爱给", url:"https://www.aigei.com/s?q=%E5%AD%97%E4%BD%93"},
+    {cat:"字体", name:"书法迷", url:"http://www.shufami.com/"},
+    {cat:"字体", name:"第一字体", url:"https://www.diyiziti.com/"},
+    {cat:"字体", name:"字体天下", url:"https://www.fonts.net.cn/"},
+    {cat:"字体", name:"毛笔字体", url:"https://www.zhenhaotv.com/"},
+    {cat:"字体", name:"字体家", url:"https://www.zitijia.com/"},
+    {cat:"博客", name:"博客网", url:"http://www.bokee.com/"},
+    {cat:"博客", name:"新浪博客", url:"https://blog.sina.com.cn/"},
+    {cat:"博客", name:"腾讯博客", url:"https://www.qq.com/"},
+    {cat:"博客", name:"凤凰博客", url:"http://blog.ifeng.com/"},
+    {cat:"博客", name:"森七博客", url:"http://www.mosq.cn/"},
+    {cat:"博客", name:"网易博客", url:"https://blog.163.com/"},
+    {cat:"博客", name:"搜狐博客", url:"https://blog.sohu.com/"},
+    {cat:"博客", name:"峰哥", url:"https://zzzzzz.me/"},
+    {cat:"博客", name:"不错吧", url:"https://bbs.bcb5.com/"},
+    {cat:"博客", name:"三岁", url:"https://www.sansuib.com/"},
+    {cat:"博客", name:"零度博客", url:"https://www.freedidi.com/"},
+    {cat:"导航", name:"小编", url:"http://www.xiaobianji.com/"},
+    {cat:"导航", name:"123导航", url:"https://www.hao123.com/"},
+    {cat:"导航", name:"果汁", url:"http://guozhivip.com/rank/"},
+    {cat:"论坛", name:"天涯", url:"http://www.tianya.cn/"},
+    {cat:"论坛", name:"新浪论坛", url:"http://bbs.sina.com.cn/"},
+    {cat:"论坛", name:"猫扑", url:"http://www.mop.com/"},
+    {cat:"论坛", name:"凤凰论坛", url:"http://bbs.ifeng.com/"},
+    {cat:"论坛", name:"互动中国", url:"http://forum.china.com.cn/"},
+    {cat:"论坛", name:"强国社区", url:"https://www.people.cn/"},
+    {cat:"论坛", name:"网易论坛", url:"http://bbs.163.com/"},
+    {cat:"图册", name:"企业画册网", url:"http://www.huacew.com/"},
+    {cat:"图册", name:"画册设计网", url:"http://www.shnek4a.com/"},
+    {cat:"图册", name:"创意猫", url:"https://www.chuangyimao.com/"},
+    {cat:"图册", name:"素材公社", url:"https://www.tooopen.com/view/197596.html"},
+    {cat:"图册", name:"千图网", url:"https://www.58pic.com/tupian/huace.html"},
+    {cat:"图册", name:"印易得", url:"http://www.yinyide.com/"},
+    {cat:"图册", name:"江阴画册", url:"http://www.hcwjy.com/"},
+    {cat:"图画", name:"爱画网", url:"http://www.art456.com/"},
+    {cat:"图画", name:"图片库", url:"http://www.tuku.cn/"},
+    {cat:"图画", name:"昵图网", url:"https://www.nipic.com/index.html"},
+    {cat:"图画", name:"天极网", url:"https://pic.yesky.com/"},
+    {cat:"图画", name:"全景网", url:"https://www.quanjing.com/"},
+    {cat:"图画", name:"天堂图片", url:"https://www.ivsky.com/"},
+    {cat:"图画", name:"51贴图", url:"http://www.51tietu.net/tp/"},
+    {cat:"学习", name:"直线网", url:"https://www.linecg.com/"},
+    {cat:"学习", name:"我要自学网", url:"http://www.pcjsh.com/"},
+    {cat:"学习", name:"站酷", url:"http://www.zcool.com.cn/"},
+    {cat:"学习", name:"慕课网", url:"http://www.imooc.com/"},
+    {cat:"学习", name:"极客学院", url:"http://www.jikexueyuan.com/"},
+    {cat:"学习", name:"网易云课堂", url:"http://study.163.com/"},
+    {cat:"学习", name:"维度空间", url:"http://www.2ii.me/"},
+    {cat:"学习", name:"中国大学MOOC", url:"https://www.icourse163.org/"},
+    {cat:"学习", name:"国图公开课", url:"http://open.nlc.cn/onlineedu/client/index.htm"},
+    {cat:"学习", name:"学堂在线", url:"https://www.xuetangx.com/"},
+    {cat:"学习", name:"多邻国", url:"https://www.duolingo.cn/"},
+    {cat:"学习", name:"wikihow", url:"https://zh.wikihow.com/%E9%A6%96%E9%A1%B5"},
+    {cat:"学习", name:"观沧海", url:"https://www.ageeye.cn/"},
+    {cat:"图书馆", name:"国家数字图书馆", url:"https://www.nlc.cn/web/index.shtml"},
+    {cat:"图书馆", name:"超星数字图书馆", url:"https://www.sslibrary.com/user/login/showlogin?clg=1"},
+    {cat:"图书馆", name:"中华珍宝馆", url:"https://g2.ltfc.net/"},
+    {cat:"图书馆", name:"上海教育出版社图书馆", url:"https://www.pep.com.cn/tsg/"},
+    {cat:"图书馆", name:"国家哲学社会科学文献", url:"https://www.ncpssd.org/index.aspx"},
+    {cat:"图书馆", name:"中国科学院文献情报中", url:"https://www.las.ac.cn/"},
+    {cat:"图书馆", name:"国家科技数字图书馆", url:"https://www.nstl.gov.cn/"},
+    {cat:"图书馆", name:"汉斯出版社中文学术期", url:"https://www.hanspub.org/"},
+    {cat:"图书馆", name:"法律法规", url:"https://www.pkulaw.com/"},
+    {cat:"图书馆", name:"NSII国家动物", url:"http://museum.ioz.ac.cn/"},
+    {cat:"图书馆", name:"全宋词", url:"http://qsc.zww.cn/"},
+    {cat:"图书馆", name:"世界数字图书馆", url:"https://www.loc.gov/collections/world-digital-library/about-this-collection/"},
+    {cat:"图书馆", name:"法国国家图书馆", url:"https://www.bnf.fr/fr"},
+    {cat:"图书馆", name:"古腾堡计划", url:"https://www.gutenberg.org/"},
+    {cat:"图书馆", name:"日本青空文库", url:"https://www.aozora.gr.jp/"},
+    {cat:"图书馆", name:"乡间郎中", url:"https://www.xjlz365.com/"},
+    {cat:"图书馆", name:"懒人Excel", url:"https://www.lanrenexcel.com/"},
+    {cat:"图书馆", name:"简明日语", url:"https://www3.nhk.or.jp/nhkworld/lesson/zh/"},
+    {cat:"图书馆", name:"元素周期表", url:"https://pt.ziziyi.com/element/mc"},
+    {cat:"图书馆", name:"中国医药查询", url:"https://www.dayi.org.cn/"},
+    {cat:"图书馆", name:"考公知识库", url:"https://saduck.top/"},
+    {cat:"图书馆", name:"知识可视化", url:"https://phet.colorado.edu/zh_CN/"},
+    {cat:"图书馆", name:"国家统计数据", url:"https://data.stats.gov.cn/dg/website/page.html#/pc/national/home"},
+    {cat:"文库", name:"中国知网", url:"https://www.cnki.net/"},
+    {cat:"文库", name:"第一范文网", url:"https://www.diyifanwen.com/"},
+    {cat:"文库", name:"MBA智库", url:"https://doc.mbalib.com/"},
+    {cat:"文库", name:"道客巴巴", url:"https://www.doc88.com/"},
+    {cat:"文库", name:"豆丁网", url:"https://www.docin.com/"},
+    {cat:"文库", name:"百度文库", url:"https://wenku.baidu.com/"},
+    {cat:"COS", name:"我爱cos", url:"http://www.52cos.cn/"},
+    {cat:"COS", name:"cosplay网", url:"http://www.cosplay8.com/index.html"},
+    {cat:"COS", name:"动漫星空cos", url:"https://acg.gamersky.com/pic/cosplay/"},
+    {cat:"COS", name:"考死受", url:"http://www.cos-show.com/"},
+    {cat:"COS", name:"cos动漫", url:"http://www.cosdm.com/"},
+    {cat:"COS", name:"cosplay王国", url:"http://www.cosplayzone.net/portal.php"},
+    {cat:"COS", name:"cosplay啦", url:"https://cosplay.la/"},
+    {cat:"手办", name:"我爱手办", url:"http://www.shoubanjiang.com/anime"},
+    {cat:"手办", name:"手办原型网", url:"http://www.aboutgk.com/"},
+    {cat:"手办", name:"178", url:"https://www.stargame.com/acg"},
+    {cat:"手办", name:"次元碉堡", url:"http://acgdb.com/"},
+    {cat:"手办", name:"XiaoT模型", url:"http://www.xiaot.com/"},
+    {cat:"手办", name:"高达同好", url:"https://www.aemedia.org/"},
+    {cat:"手办", name:"手办吧", url:"http://tieba.baidu.com/"},
+    {cat:"理财", name:"大麦理财", url:"http://www.damailicai.com/"},
+    {cat:"理财", name:"搜狗理财", url:"http://fa.sogou.com/"},
+    {cat:"理财", name:"懒财网", url:"https://www.lancai.cn/index.html"},
+    {cat:"理财", name:"抱财网", url:"https://www.baocai.com/"},
+    {cat:"理财", name:"小狗钱钱", url:"http://www.xgqq.com/"},
+    {cat:"理财", name:"中国理财网", url:"https://www.chinawealth.com.cn/"},
+    {cat:"理财", name:"易通贷", url:"https://www.etongdai.com/"},
+    {cat:"企业查询", name:"天眼查", url:"https://www.tianyancha.com/"},
+    {cat:"企业查询", name:"企查查", url:"https://www.qcc.com/"},
+    {cat:"企业查询", name:"企查猫", url:"https://www.qichamao.com/"},
+    {cat:"求职", name:"猎聘网", url:"https://www.liepin.com/"},
+    {cat:"求职", name:"赶集网", url:"https://passport.58.com/v2/login?isredirect=true&source=58-ganji-pc&path=https%3A%2F%2Fganji.com"},
+    {cat:"求职", name:"前程无忧", url:"http://www.51job.com/"},
+    {cat:"求职", name:"中华英才", url:"http://www.chinahr.com/"},
+    {cat:"求职", name:"智联招聘", url:"http://www.zhaopin.com/"},
+    {cat:"求职", name:"58同城", url:"https://ty.58.com/"},
+    {cat:"求职", name:"应届生求职", url:"http://www.yingjiesheng.com/"},
+    {cat:"生活", name:"生活网", url:"http://www.shw365.com/"},
+    {cat:"生活", name:"城市生活网", url:"http://www.iecity.com/"},
+    {cat:"生活", name:"连手网", url:"https://lshou.com/"},
+    {cat:"生活", name:"百姓网", url:"https://baixing.com/"},
+    {cat:"生活", name:"本来生活网", url:"https://www.benlai.com/"},
+    {cat:"生活", name:"中华生活网", url:"http://www.369518.com/"},
+    {cat:"生活", name:"生活服务网", url:"https://shenghuo.huangye88.com/"},
+    {cat:"交通", name:"12306", url:"https://www.12306.cn/"},
+    {cat:"交通", name:"携程", url:"https://www.ctrip.com/"},
+    {cat:"交通", name:"飞猪", url:"https://www.fliggy.com/"},
+    {cat:"交通", name:"8684公交查询", url:"https://www.8684.cn/"},
+    {cat:"交通", name:"8684地铁查询网", url:"https://dt.8684.cn/"},
+    {cat:"交通", name:"图吧公交", url:"https://bus.mapbar.com/"},
+    {cat:"交通", name:"图吧地铁", url:"https://ditie.mapbar.com/"},
+    {cat:"购物", name:"淘宝", url:"https://www.taobao.com/"},
+    {cat:"购物", name:"天猫", url:"https://www.tmall.com/"},
+    {cat:"购物", name:"苏宁易购", url:"https://www.suning.com/"},
+    {cat:"购物", name:"亚马逊", url:"https://www.amazon.cn/"},
+    {cat:"购物", name:"唯品会", url:"http://www.vip.com/"},
+    {cat:"购物", name:"京东", url:"http://www.jd.com/"},
+    {cat:"购物", name:"聚美优品", url:"http://bj.jumei.com/"},
+    {cat:"快递查询", name:"快递100", url:"https://www.kuaidi100.com/"},
+    {cat:"快递查询", name:"顺丰", url:"https://www.sf-express.com/"},
+    {cat:"快递查询", name:"EMS", url:"https://www.ems.com.cn/"},
+    {cat:"快递查询", name:"韵达", url:"https://www.yundaex.com/"},
+    {cat:"快递查询", name:"申通", url:"https://www.sto.cn/"},
+    {cat:"快递查询", name:"圆通", url:"https://www.kuaidi100.com/all/yt.shtml"},
+    {cat:"快递查询", name:"爱查快递", url:"https://www.ickd.cn/"},
+    {cat:"邮箱", name:"163邮箱", url:"http://mail.163.com/"},
+    {cat:"邮箱", name:"tom邮箱", url:"http://web.mail.tom.com/webmail/login/index.action"},
+    {cat:"邮箱", name:"新浪邮箱", url:"http://mail.sina.com.cn/"},
+    {cat:"邮箱", name:"126邮箱", url:"http://www.126.com/"},
+    {cat:"邮箱", name:"QQ邮箱", url:"https://mail.qq.com/"},
+    {cat:"邮箱", name:"188财富邮", url:"https://www.188.com/"},
+    {cat:"奇怪的网站", name:"无用的网站", url:"https://theuselessweb.com/"},
+    {cat:"奇怪的网站", name:"纪妖", url:"https://www.cbaigui.com/"},
+    {cat:"奇怪的网站", name:"吃什么", url:"https://chishenme.xyz/"},
+    {cat:"奇怪的网站", name:"时光邮局", url:"https://www.hi2future.com/"},
+    {cat:"奇怪的网站", name:"幻觉生成", url:"https://strobe.cool/"},
+    {cat:"奇怪的网站", name:"云段子", url:"https://www.yduanzi.com/"},
+    {cat:"奇怪的网站", name:"好好说话", url:"https://lab.magiconch.com/nbnhhsh/"},
+    {cat:"体育", name:"足球", url:"https://www.dyjw.com/matches"},
+    {cat:"彩票", name:"新浪彩票", url:"https://lottery.sina.com.cn/"},
+    {cat:"彩票", name:"双色球历史", url:"https://kaijiang.zhcw.com/zhcw/html/ssq/list.html"},
+    {cat:"彩票", name:"彩票查询", url:"https://caipiao.ip138.com/"},
+    {cat:"彩票", name:"中彩网", url:"https://www.zhcw.com/"},
+    {cat:"汽车", name:"太平洋汽车", url:"https://price.pcauto.com.cn/"},
+    {cat:"汽车", name:"汽车之家", url:"https://www.autohome.com.cn/hechi/"},
+    {cat:"汽车", name:"易车", url:"https://www.yiche.com/"},
+    {cat:"汽车", name:"搜狐汽车网", url:"https://db.auto.sohu.com/home/?spm=smpc.home.top-nav.17.1555312357871pGAAq77"},
+    {cat:"汽车", name:"爱卡汽车网", url:"https://www.xcar.com.cn/"}
+  ];
+  var BASE_CATS = ["ACG","搜索","翻译","其他","AI","工具","直播","游戏","模拟器","视频","服务器","域名模板","音乐","网盘","小说","新闻资讯","漫画","下载","字幕","APP","加速","装机","字体","博客","导航","论坛","图册","图画","学习","图书馆","文库","COS","手办","理财","企业查询","求职","生活","交通","购物","快递查询","邮箱","奇怪的网站","体育","彩票","汽车"];
+  var HUES = ["teal","rose","amber","blue","violet","pink"];
+
+  /* ---------- 状态 ---------- */
+  var LS_CUSTOM = "nav.custom", LS_THEME = "nav.theme";
+  var custom = load(LS_CUSTOM, []);
+  var state = { cat:"全部" };
+
+  /* ---------- 农历 ---------- */
+  function lunarDate(y){
+    var i, sum = 30, info = lunarInfo(y), leap = info & 0x10000;
+    for(i = 1; i < 13; i++){
+      sum = 29;
+      if(info & (0x10000 >> i)) sum += 1;
+    }
+    return { leap: leap, leapMonth: info & 0xf, leapDays: (info & 0x10000) ? sum : 0 };
+  }
+  function lunarInfo(y){
+    var table = [
+      0x04bd8,0x04ae5,0x0a4c0,0x0a4d5,0x0d261,0x0d536,0x155a0,0x155d5,0x169b0,0x16a74,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+      0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95
+    ];
+    var base = 1900;
+    var y2 = y - base;
+    if(y2 < 0 || y2 >= table.length) return null;
+    return table[y2];
+  }
+
+  function load(k, d){ try{ var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } }
+  function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  function allLinks(){ return BUILTIN.concat(custom); }
+  function liveLinks(){ return allLinks(); }
+  function hueOf(cat){
+    var i = BASE_CATS.indexOf(cat);
+    if(i === -1){
+      var h = 0;
+      for(var k = 0; k < cat.length; k++) h = (h * 31 + cat.charCodeAt(k)) >>> 0;
+      i = h;
+    }
+    return HUES[i % HUES.length];
+  }
+  function catOrder(){
+    var order = BASE_CATS.filter(function(c){
+      return liveLinks().some(function(l){ return l.cat === c; });
+    });
+    liveLinks().forEach(function(l){
+      if(order.indexOf(l.cat) === -1) order.push(l.cat);
+    });
+    return order;
+  }
+  function host(u){ try{ return new URL(u).hostname.replace(/^www\./,""); }catch(e){ return u; } }
+  function favHost(u){ try{ return new URL(u).hostname; }catch(e){ return u; } }
+
+  /* ---------- 渲染 ---------- */
+  var sectionsEl = document.getElementById("sections");
+  var chipsEl = document.getElementById("chips");
+  var statText = document.getElementById("statText");
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function matches(l, cat){
+    return cat === "全部" || l.cat === cat;
+  }
+
+  function renderChips(){
+    var cats = catOrder();
+    var counts = {};
+    liveLinks().forEach(function(l){ counts[l.cat] = (counts[l.cat]||0)+1; });
+    var html = '<button class="chip ' + (state.cat==="全部"?"on":"") + '" data-cat="全部">全部 <span class="n">' + liveLinks().length + '</span></button>';
+    cats.forEach(function(c){
+      html += '<button class="chip ' + (state.cat===c?"on":"") + '" data-cat="' + esc(c) + '">' + esc(c) + ' <span class="n">' + (counts[c]||0) + '</span></button>';
+    });
+    chipsEl.innerHTML = html;
+  }
+
+  var CAT_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg>';
+
+  function render(){
+    renderChips();
+    var list = liveLinks().filter(function(l){ return matches(l, state.cat); });
+    var cats = catOrder().filter(function(c){
+      return list.some(function(l){ return l.cat === c; });
+    });
+
+    if(!list.length){
+      sectionsEl.innerHTML =
+        '<div class="empty"><b>这个分类暂无站点</b><span>点击「全部」查看其它分类，或用上方搜索条跳转引擎</span></div>';
+    } else {
+      var idx = 0;
+      var html = "";
+      cats.forEach(function(cat){
+        var items = list.filter(function(l){ return l.cat === cat; });
+        html += '<section class="cat-card" style="animation-delay:' + (cats.indexOf(cat)*60) + 'ms">'
+              + '<header class="cat-head"><span class="ic">' + CAT_ICON + '</span>'
+              + '<h2>' + esc(cat) + ' <span class="count">' + items.length + '</span></h2></header>'
+              + '<div class="cat-body"><div class="grid">';
+        items.forEach(function(l){
+          html += '<a class="card" style="--i:' + (idx++ % 12) + '" href="' + esc(l.url) + '" target="_blank" rel="noopener">'
+                + '<img class="fav" src="https://favicon.im/' + esc(favHost(l.url)) + '" alt="" loading="lazy" data-ch="' + esc(l.name.charAt(0).toUpperCase()) + '" data-hue="' + hueOf(cat) + '" onerror="this.onerror=null;var s=document.createElement(\'span\');s.className=\'mono \' + this.dataset.hue;s.textContent=this.dataset.ch;this.parentNode.replaceChild(s,this)">'
+                + '<span class="card-body">'
+                + '<span class="card-name">' + esc(l.name) + '</span>'
+                + '<span class="card-desc">' + esc(l.desc || l.cat) + '</span>'
+                + '<span class="card-url">' + esc(host(l.url)) + '</span>'
+                + '</span></a>';
+        });
+        html += '</div></div></section>';
+      });
+      sectionsEl.innerHTML = html;
+    }
+
+    statText.innerHTML = '共 <b>' + list.length + '</b> 个站点'
+      + (state.cat !== "全部" ? ' <span class="dot"></span> 分类：' + esc(state.cat) : '');
+  }
+
+  /* ---------- 交互 ---------- */
+  var searchEl = document.getElementById("search");
+
+  /* 分类多引擎搜索（移植自 index.html） */
+  var LS_SRCH_CAT = "nav.searchcat";
+  var LS_SRCH_URL = "nav.searchengine";
+  var SRCH_ICON = {
+    web:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 1 0 5.29 14.03l4.34 4.34 1.42-1.42-4.34-4.34A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg>',
+    ai:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2a1 1 0 0 1 1 1v1h4V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v1h1a1 1 0 1 1 0 2h-1v4h1a1 1 0 1 1 0 2h-1v1a2 2 0 0 1-2 2h-1v1a1 1 0 1 1-2 0v-1h-4v1a1 1 0 1 1-2 0v-1H7a2 2 0 0 1-2-2v-1H4a1 1 0 1 1 0-2h1v-4H4a1 1 0 0 1 0-2h1V7a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm-2 7v6h10V9H7z"/></svg>',
+    video:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/></svg>',
+    doc:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm2 2v2h2V5H6zm10 0v2h2V5h-2zM6 9v2h2V9H6zm10 0v2h2V9h-2zM6 13v2h2v-2H6zm10 0v2h2v-2h-2zM6 17v2h2v-2H6zm10 0v2h2v-2h-2z"/></svg>'
+  };
+  var SEARCH_DATA = [
+    {name:'网页搜索', icon:SRCH_ICON.web, child:[
+      {name:'百度',url:'https://www.baidu.com/s?wd='},
+      {name:'Google',url:'https://www.google.com/search?q='},
+      {name:'Bing',url:'https://cn.bing.com/search?q='},
+      {name:'搜狗',url:'https://www.sogou.com/web?query='},
+      {name:'360',url:'https://www.so.com/s?q='},
+      {name:'头条',url:'https://so.toutiao.com/search/?dvpf=pc&keyword='},
+      {name:'夸克',url:'https://quark.sm.cn/s?q='},
+      {name:'站内',url:'/search/'}
+    ]},
+    {name:'AI搜索', icon:SRCH_ICON.ai, child:[
+      {name:'豆包',url:'https://www.doubao.com/chat/search?q='},
+      {name:'元宝',url:'https://www.sogou.com/aimode/search?query='},
+      {name:'文心',url:'https://chat.baidu.com/search?word='},
+      {name:'秘塔',url:'https://metaso.cn/?q='},
+      {name:'小艺',url:'https://xiaoyi.huawei.com/chat/?q='},
+      {name:'当贝',url:'https://ai.dangbei.com/chat/local_5KHo_Q?q='}
+    ]},
+    {name:'视频搜索', icon:SRCH_ICON.video, child:[
+      {name:'m1907',url:'https://tool.liumingye.cn/video/?s='},
+      {name:'抖音',url:'https://www.douyin.com/search/'},
+      {name:'快手',url:'https://www.kuaishou.com/search/video?searchKey='},
+      {name:'小红书',url:'https://www.xiaohongshu.com/search_result/?keyword='},
+      {name:'哔哩哔哩',url:'https://search.bilibili.com/all?keyword='},
+      {name:'优酷',url:'https://so.youku.com/search/q_'},
+      {name:'爱奇艺',url:'https://www.iqiyi.com/search/'},
+      {name:'腾讯视频',url:'https://v.qq.com/x/search/?q='}
+    ]},
+    {name:'资料', icon:SRCH_ICON.doc, child:[
+      {name:'豆瓣',url:'https://search.douban.com/movie/subject_search?search_text='},
+      {name:'IMDb',url:'https://www.imdb.com/find/?q='},
+      {name:'TMDB',url:'https://www.themoviedb.org/search?query='}
+    ]}
+  ];
+  var catIndex = load(LS_SRCH_CAT, 0);
+  if(typeof catIndex !== "number" || catIndex < 0 || catIndex >= SEARCH_DATA.length) catIndex = 0;
+  var currentSearchUrl = load(LS_SRCH_URL, SEARCH_DATA[catIndex].child[0].url);
+
+  var sbTabsEl = document.getElementById("sbTabs");
+  var sbEnginesEl = document.getElementById("sbEngines");
+  function escAttr(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+  function renderTabs(){
+    sbTabsEl.innerHTML = SEARCH_DATA.map(function(c, i){
+      return '<button type="button" class="sb-tab' + (i === catIndex ? " active" : "")
+        + '" data-index="' + i + '" role="tab">' + c.icon + "<span>" + c.name + "</span></button>";
+    }).join("");
+  }
+  function renderEngines(){
+    var list = SEARCH_DATA[catIndex].child;
+    if(!list.some(function(e){ return e.url === currentSearchUrl; })){
+      currentSearchUrl = list[0].url;
+    }
+    sbEnginesEl.innerHTML = list.map(function(e){
+      return '<button type="button" class="sb-engine' + (e.url === currentSearchUrl ? " active" : "")
+        + '" data-url="' + escAttr(e.url) + '" role="tab">' + e.name + "</button>";
+    }).join("");
+  }
+  sbTabsEl.addEventListener("click", function(e){
+    var b = e.target.closest(".sb-tab");
+    if(!b) return;
+    catIndex = parseInt(b.dataset.index, 10);
+    currentSearchUrl = SEARCH_DATA[catIndex].child[0].url;
+    save(LS_SRCH_CAT, catIndex);
+    save(LS_SRCH_URL, currentSearchUrl);
+    renderTabs(); renderEngines();
+    searchEl.focus();
+  });
+  sbEnginesEl.addEventListener("click", function(e){
+    var b = e.target.closest(".sb-engine");
+    if(!b) return;
+    currentSearchUrl = b.dataset.url;
+    save(LS_SRCH_URL, currentSearchUrl);
+    renderEngines();
+    searchEl.focus();
+  });
+  document.getElementById("searchForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var q = searchEl.value.trim();
+    if(!q){ searchEl.focus(); return; }
+    window.open(currentSearchUrl + encodeURIComponent(q), "_blank", "noopener");
+  });
+  renderTabs();
+  renderEngines();
+
+  chipsEl.addEventListener("click", function(e){
+    var chip = e.target.closest(".chip");
+    if(!chip) return;
+    state.cat = chip.dataset.cat;
+    render();
+  });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "/" && document.activeElement !== searchEl
+       && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)){
+      e.preventDefault(); searchEl.focus();
+    }
+    if(e.key === "Escape" && document.activeElement === searchEl){
+      searchEl.blur();
+    }
+  });
+
+  /* ---------- 主题与自定义配色 ---------- */
+  var htmlEl = document.documentElement;
+  var LS_APPEAR = "nav.appear";
+  var DEFAULTS = {
+    light:{ bg:"#ffffff", card:"#fdfcf9", ink:"#211d17", muted:"#77705f", faint:"#a59d8a", border:"#e3ddcd", borderStrong:"#cec6b1", accent:"#c2452d" },
+    dark:{ bg:"#151310", card:"#201d17", ink:"#ece7da", muted:"#9a927e", faint:"#6e6753", border:"#2c2920", borderStrong:"#3d382a", accent:"#e2785c" }
+  };
+  var PRESETS = [
+    { id:"orig", name:"宣纸赭红", light:{ bg:"#ffffff", card:"#fdfcf9", ink:"#211d17", muted:"#77705f", faint:"#a59d8a", border:"#e3ddcd", borderStrong:"#cec6b1", accent:"#c2452d" },
+                        dark:{ bg:"#151310", card:"#201d17", ink:"#ece7da", muted:"#9a927e", faint:"#6e6753", border:"#2c2920", borderStrong:"#3d382a", accent:"#e2785c" } },
+    { id:"ocean", name:"晨雾海蓝", light:{ bg:"#f2f5f8", card:"#fcfdfe", ink:"#1b2430", muted:"#5f6d7e", faint:"#93a1b2", border:"#dde5ee", borderStrong:"#c3cfdd", accent:"#2f6db3" },
+                        dark:{ bg:"#12161d", card:"#181e27", ink:"#dfe6ef", muted:"#8b97a7", faint:"#5c6775", border:"#262e3a", borderStrong:"#36414f", accent:"#6fa4e0" } },
+    { id:"forest", name:"青瓷松绿", light:{ bg:"#f1f5f2", card:"#fbfdfb", ink:"#1c241f", muted:"#5f6f64", faint:"#93a498", border:"#dbe6de", borderStrong:"#c0d1c6", accent:"#2c7a54" },
+                        dark:{ bg:"#111613", card:"#171d19", ink:"#dfe8e2", muted:"#8a9990", faint:"#5b6a61", border:"#232d27", borderStrong:"#324038", accent:"#61b189" } },
+    { id:"dusk", name:"暮山紫", light:{ bg:"#f5f3f7", card:"#fdfcfe", ink:"#221e29", muted:"#6a6478", faint:"#9c96ab", border:"#e2ddea", borderStrong:"#cec7db", accent:"#6a4fb3" },
+                        dark:{ bg:"#14121a", card:"#1a1822", ink:"#e6e2ee", muted:"#948ea4", faint:"#645e73", border:"#2a2734", borderStrong:"#3a3648", accent:"#a48ce0" } },
+    { id:"sand", name:"暖沙橘", light:{ bg:"#f8f4ec", card:"#fefbf4", ink:"#26201a", muted:"#6f6455", faint:"#a2947f", border:"#e8dfcd", borderStrong:"#d5c8ae", accent:"#d1651a" },
+                        dark:{ bg:"#161310", card:"#1d1a15", ink:"#eee6d8", muted:"#9a8f7b", faint:"#6b6353", border:"#2e2a20", borderStrong:"#403a2c", accent:"#e5934e" } }
+  ];
+  var WX_LIGHT = "https://i.tianqi.com/index.php?c=code&id=40&color=%2377705f";
+  var WX_DARK  = "https://i.tianqi.com/index.php?c=code&id=40&color=%239a927e";
+  function applyWeather(t){
+    var f = document.getElementById("weatherFrame");
+    if(!f) return;
+    var want = t === "dark" ? WX_DARK : WX_LIGHT;
+    if(f.getAttribute("src") !== want) f.setAttribute("src", want);
+  }
+
+  function hex2rgb(h){
+    h = String(h || "").trim().replace(/^#/,"");
+    if(/^[0-9a-f]{3}$/i.test(h)) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    if(!/^[0-9a-f]{6}$/i.test(h)) return null;
+    return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+  }
+  function rgb2hex(r,g,b){
+    return "#" + [r,g,b].map(function(v){ return Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0"); }).join("");
+  }
+  function lum(rgb){
+    var a = rgb.map(function(v){ v/=255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); });
+    return .2126*a[0] + .7152*a[1] + .0722*a[2];
+  }
+  function mix(a, b, t){ return a.map(function(v,i){ return v + (b[i]-v)*t; }); }
+  function setVar(name, hex){ if(hex) htmlEl.style.setProperty(name, hex); }
+
+  var theme = "light";
+  var colors = { light: Object.assign({}, DEFAULTS.light), dark: Object.assign({}, DEFAULTS.dark) };
+  var accentCust = { light:false, dark:false };
+  var presetSel = "orig";
+  var customBg = { light:"", dark:"" };
+
+  function derive(t){
+    var c = colors[t], ink = hex2rgb(c.ink), card = hex2rgb(c.card);
+    if(!c || !ink || !card) return;
+    var bg = hex2rgb(c.bg) || mix(card, ink, .04);
+    var isDark = lum(ink) > .55;
+    var accent = hex2rgb(c.accent) || (isDark ? [226,120,92] : [194,69,45]);
+    setVar("--bg", c.bg);
+    setVar("--bg-soft", rgb2hex.apply(null, mix(bg, ink, isDark ? .05 : .04)));
+    setVar("--card", c.card);
+    setVar("--ink", c.ink);
+    setVar("--muted", c.muted);
+    setVar("--faint", c.faint);
+    setVar("--border", c.border);
+    setVar("--border-strong", c.borderStrong);
+    setVar("--accent", c.accent);
+    setVar("--accent-soft", rgb2hex.apply(null, mix(card, accent, isDark ? .18 : .12)));
+    setVar("--mark", rgb2hex.apply(null, mix(card, [245,227,184], .5)));
+    setVar("--fx-rgb", (isDark
+      ? mix(card,[255,255,255],.87)
+      : mix(card,ink,.35)).map(function(v){ return Math.round(v); }).join(","));
+    var swatch = document.querySelector('meta[name="theme-color"]');
+    if(swatch) swatch.setAttribute("content", c.bg);
+  }
+  function persist(){
+    save(LS_APPEAR, {
+      theme: theme,
+      preset: presetSel,
+      colors: presetSel === "custom" ? { light: colors.light, dark: colors.dark } : null,
+      bg: customBg
+    });
+  }
+  function PRESET(id){ for(var i=0;i<PRESETS.length;i++) if(PRESETS[i].id===id) return PRESETS[i]; return PRESETS[0]; }
+  function refresh(withWeather){
+    derive(theme);
+    if(window.__fxTheme) window.__fxTheme();
+    if(withWeather) applyWeather(theme);
+  }
+  function applyPreset(id){
+    var p = PRESET(id);
+    colors.light = Object.assign({}, p.light);
+    colors.dark = Object.assign({}, p.dark);
+    presetSel = id;
+    customBg = { light:"", dark:"" };
+    refresh(true);
+  }
+  function setTheme(t){
+    theme = t;
+    htmlEl.dataset.theme = t;
+    htmlEl.style.colorScheme = t === "dark" ? "dark" : "light";
+    if(customBg[t]) colors[t].bg = customBg[t];
+    derive(t);
+    document.getElementById("themeBtn").textContent = t === "dark" ? "◑" : "◐";
+    if(window.__fxTheme) window.__fxTheme();
+    applyWeather(t);
+    renderPanel();
+  }
+  document.getElementById("themeBtn").title = "外观配色";
+
+  /* 面板 */
+  var panel = document.createElement("div");
+  panel.className = "ap-panel";
+  panel.hidden = true;
+  document.querySelector(".ap-wrap").appendChild(panel);
+  var btnT = document.getElementById("themeBtn");
+  btnT.addEventListener("click", function(e){
+    e.stopPropagation();
+    panel.hidden = !panel.hidden;
+    if(!panel.hidden) renderPanel();
+  });
+  panel.addEventListener("click", function(e){ e.stopPropagation(); });
+  document.addEventListener("click", function(){ panel.hidden = true; });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") panel.hidden = true; });
+
+  function renderPanel(){
+    var c = colors[theme];
+    var html = '<div class="ap-seg">'
+         +   '<button type="button" class="seg ' + (theme==="light"?"on":"") + '" data-m="light">浅色</button>'
+         +   '<button type="button" class="seg ' + (theme==="dark"?"on":"") + '" data-m="dark">深色</button>'
+         + '</div>'
+         + '<div class="ap-title">配色预设</div>';
+    PRESETS.forEach(function(p){
+      html += '<div class="ap-preset ' + (presetSel===p.id?"on":"") + '" data-p="' + p.id + '">'
+            +   '<span class="ap-swatch" style="--dot:' + p[theme].accent + '"></span>'
+            +   '<span class="ap-name">' + p.name + '</span>'
+            + '</div>';
+    });
+    html += '<div class="ap-title">自定义取色</div>'
+         +  '<div class="ap-bg"><span class="ap-name">强调色</span>'
+         +    '<input type="color" class="ap-acc" data-k="accent" value="' + c.accent + '" title="选择强调色"></div>'
+         +  '<div class="ap-bg"><span class="ap-name">背景色</span>'
+         +    '<input type="color" class="ap-acc" data-k="bg" value="' + c.bg + '" title="选择背景色"></div>'
+         +  '<button type="button" class="ap-reset" data-reset>恢复默认配色</button>';
+    panel.innerHTML = html;
+  }
+  panel.addEventListener("click", function(e){
+    var seg = e.target.closest(".seg");
+    if(seg){ setTheme(seg.dataset.m); persist(); return; }
+    if(e.target.closest(".ap-reset")){
+      applyPreset("orig");
+      accentCust = { light:false, dark:false };
+      customBg = { light:"", dark:"" };
+      presetSel = "orig";
+      renderPanel(); persist();
+      return;
+    }
+    var row = e.target.closest(".ap-preset");
+    if(row && row.dataset.p && row.dataset.p !== "custom"){
+      applyPreset(row.dataset.p);
+      accentCust[theme] = false;
+      renderPanel(); persist();
+    }
+  });
+  panel.addEventListener("input", function(e){
+    var k = e.target.dataset && e.target.dataset.k;
+    if(!k) return;
+    presetSel = "custom";
+    colors[theme][k] = e.target.value;
+    if(k === "accent") accentCust[theme] = true;
+    if(k === "bg") customBg[theme] = e.target.value;
+    refresh(true);
+    renderPanel(); persist();
+  });
+
+  /* 启动：读本地记忆 */
+  function validColor(o){
+    return o && hex2rgb(o.bg) && hex2rgb(o.card) && hex2rgb(o.ink) && hex2rgb(o.accent);
+  }
+  var savedApp = load(LS_APPEAR, null);
+  var sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var legacyTheme = load(LS_THEME, null);
+  theme = (savedApp && (savedApp.theme === "dark" || savedApp.theme === "light")) ? savedApp.theme
+        : (legacyTheme === "dark" || legacyTheme === "light") ? legacyTheme
+        : (sysDark ? "dark" : "light");
+  if(savedApp && savedApp.preset === "custom" && savedApp.colors){
+    presetSel = "custom";
+    if(validColor(savedApp.colors.light)) Object.assign(colors.light, savedApp.colors.light);
+    if(validColor(savedApp.colors.dark)) Object.assign(colors.dark, savedApp.colors.dark);
+  } else if(savedApp && savedApp.preset && savedApp.preset !== "orig" && PRESET(savedApp.preset).id === savedApp.preset){
+    applyPreset(savedApp.preset);
+  }
+  if(savedApp && savedApp.bg){
+    ["light","dark"].forEach(function(t){
+      if(hex2rgb(savedApp.bg[t])){ customBg[t] = savedApp.bg[t]; colors[t].bg = savedApp.bg[t]; }
+    });
+  }
+  htmlEl.dataset.theme = theme;
+  htmlEl.style.colorScheme = theme === "dark" ? "dark" : "light";
+  derive(theme);
+  applyWeather(theme);
+  document.getElementById("themeBtn").textContent = theme === "dark" ? "◑" : "◐";
+
+  /* ---------- 农历 ---------- */
+  var WEEK = ["日","一","二","三","四","五","六"];
+  var GAN = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+  var ZHI = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+  var ANIMAL = ["鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"];
+  var LNMTH = ["正","二","三","四","五","六","七","八","九","十","冬","腊"];
+  var LNDAY = ["初一","初二","初三","初四","初五","初六","初七","初八","初九","初十",
+    "十一","十二","十三","十四","十五","十六","十七","十八","十九","二十",
+    "廿一","廿二","廿三","廿四","廿五","廿六","廿七","廿八","廿九","三十"];
+  var lunarInfoTable = [
+    0x04bd8,0x04ae5,0x0a4c0,0x0a4d5,0x0d261,0x0d536,0x155a0,0x155d5,0x169b0,0x16a74,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,
+    0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95,0x16e95
+  ];
+  function lunarInfo(y){
+    var y2 = y - 1900;
+    if(y2 < 0 || y2 >= lunarInfoTable.length) return null;
+    return lunarInfoTable[y2];
+  }
+  function lunarText(year, month, day){
+    var info = lunarInfo(year);
+    if(info === null) return null;
+    var leapMonth = info & 0xf;
+    var monthLen = [];
+    for(var m = 1; m <= 12; m++) monthLen.push((info & (0x10000 >> m)) ? 30 : 29);
+    var total = 0;
+    for(var i = 1; i < month; i++) total += monthLen[i - 1];
+    total += day;
+    var isLeap = false;
+    for(var r = 1; r <= 12; r++){
+      if(r === leapMonth){
+        var leapDays = (info & (0x10000 >> r)) ? 30 : 29;
+        if(leapDays > 0){
+          if(total <= leapDays){ isLeap = true; break; }
+          total -= leapDays;
+        }
+      }
+      if(total <= monthLen[r - 1]) break;
+      total -= monthLen[r - 1];
+    }
+    var mon = (isLeap ? "闰" : "") + LNMTH[month - 1] + "月";
+    var dat = LNDAY[day - 1];
+    return { mon: mon, dat: dat };
+  }
+
+  function tick(){
+    var d = new Date();
+    var lt = lunarText(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    var clockEl = document.getElementById("clock");
+    if(lt){
+      clockEl.innerHTML =
+        '<span class="solar">' + d.getFullYear() + " 年 " + (d.getMonth()+1) + " 月 " + d.getDate() + " 日  周" + WEEK[d.getDay()]
+        + '  ' + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0")
+        + '</span>'
+        + ' <span class="lunar">' + lt.mon + lt.dat + '</span>';
+    } else {
+      clockEl.textContent =
+        d.getFullYear() + " 年 " + (d.getMonth()+1) + " 月 " + d.getDate() + " 日  周" + WEEK[d.getDay()]
+        + "  " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+    }
+  }
+  tick(); setInterval(tick, 30000);
+
+  /* ---------- 日历面板 ---------- */
+  (function(){
+    var wrap = document.querySelector(".cal-wrap");
+    var clockEl = document.getElementById("clock");
+    var panel = document.getElementById("calPanel");
+    if(!wrap || !clockEl || !panel) return;
+    var today = new Date();
+    var viewY = today.getFullYear(), viewM = today.getMonth();
+    var WD = ["日","一","二","三","四","五","六"];
+
+    function build(){
+      var first = new Date(viewY, viewM, 1);
+      var startWd = first.getDay();
+      var days = new Date(viewY, viewM + 1, 0).getDate();
+      var prevDays = new Date(viewY, viewM, 0).getDate();
+      var t = new Date();
+      var isCurMonth = t.getFullYear() === viewY && t.getMonth() === viewM;
+
+      /* 生成格子序列：上月补位 + 本月 + 下月补位（凑满整行） */
+      var pm = viewM - 1, pmY = viewY; if(pm < 0){ pm = 11; pmY--; }
+      var nm = viewM + 1, nmY = viewY; if(nm > 11){ nm = 0; nmY++; }
+      var cells = [], i;
+      for(i = 0; i < startWd; i++) cells.push({ n: prevDays - startWd + i + 1, cls: "dim", y: pmY, m: pm, d: prevDays - startWd + i + 1 });
+      for(i = 1; i <= days; i++){
+        var cls = (c => (c === 0 || c === 6) ? "we" : "")((i + startWd - 1) % 7);
+        if(isCurMonth && i === t.getDate()) cls = "today";
+        cells.push({ n: i, cls: cls, y: viewY, m: viewM, d: i });
+      }
+      while(cells.length % 7 !== 0){
+        var nx = cells.length - startWd - days + 1;
+        cells.push({ n: nx, cls: "dim", y: nmY, m: nm, d: nx });
+      }
+
+      var rows = "";
+      for(i = 0; i < cells.length; i += 7){
+        rows += "<tr>";
+        for(var j = 0; j < 7; j++){
+          var c = cells[i + j];
+          rows += "<td class=\"" + c.cls + "\" data-y=\"" + c.y + "\" data-m=\"" + c.m + "\" data-d=\"" + c.d + "\"><span>" + c.n + "</span></td>";
+        }
+        rows += "</tr>";
+      }
+
+      var tlt = lunarText(t.getFullYear(), t.getMonth() + 1, t.getDate());
+      panel.innerHTML =
+        '<div class="cal-head">'
+        + '<span class="cal-title">' + viewY + " 年 " + (viewM + 1) + " 月</span>"
+        + '<span class="cal-nav">'
+        + '<button type="button" data-nav="-1" title="上一月">‹</button>'
+        + '<button type="button" data-nav="0" title="回到本月">今天</button>'
+        + '<button type="button" data-nav="1" title="下一月">›</button>'
+        + '</span></div>'
+        + '<table class="cal"><thead><tr>'
+        + '<th class="we">日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th class="we">六</th>'
+        + '</tr></thead><tbody>' + rows + '</tbody></table>'
+        + '<div class="cal-foot"><span>' + (tlt ? tlt.mon + tlt.dat : "") + '</span>'
+        + '<a class="cal-ext" href="https://www.baidu.com/s?wd=' + encodeURIComponent(viewY + "年" + (viewM + 1) + "月日历") + '" target="_blank" rel="noopener" title="在新标签页打开百度日历（节假日·宜忌）">百度日历 ↗</a></div>';
+    }
+    function open(){ panel.hidden = false; build(); }
+    function close(){ panel.hidden = true; }
+    clockEl.addEventListener("click", function(e){
+      e.stopPropagation();
+      panel.hidden ? open() : close();
+    });
+    panel.addEventListener("click", function(e){
+      e.stopPropagation();
+      var b = e.target.closest("button[data-nav]");
+      if(b){
+        var d = Number(b.dataset.nav);
+        if(d === 0){ var t = new Date(); viewY = t.getFullYear(); viewM = t.getMonth(); }
+        else { viewM += d; if(viewM < 0){ viewM = 11; viewY--; } if(viewM > 11){ viewM = 0; viewY++; } }
+        build();
+        return;
+      }
+      var td = e.target.closest("td[data-y]");
+      if(td){
+        var q = td.dataset.y + "年" + (Number(td.dataset.m) + 1) + "月" + td.dataset.d + "日 黄历";
+        window.open("https://www.baidu.com/s?wd=" + encodeURIComponent(q), "_blank", "noopener");
+      }
+    });
+    document.addEventListener("click", close);
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape") close(); });
+  })();
+
+  /* ---------- toast ---------- */
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 2400);
+  }
+
+  /* ---------- 回到顶部 ---------- */
+  (function(){
+    var btn = document.getElementById("toTop");
+    if(!btn) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var shown = false;
+    function toggle(){
+      var want = (window.scrollY || document.documentElement.scrollTop) > 320;
+      if(want !== shown){ shown = want; btn.classList.toggle("show", want); }
+    }
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+    btn.addEventListener("click", function(){
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    });
+  })();
+
+  /* ---------- 四季特效 ---------- */
+  (function(){
+    var cvs = document.getElementById("fx");
+    var btn = document.getElementById("seasonBtn");
+    if(!cvs || !cvs.getContext) return;
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      cvs.remove(); if(btn) btn.remove(); return;
+    }
+    var ctx = cvs.getContext("2d");
+    var W = 0, H = 0, dpr = 1, parts = [], last = 0, raf = 0, S = null;
+    var LS_SEASON = "nav.season";
+    var MODES = ["auto","spring","summer","autumn","winter","off"];
+    var ICON = { spring:"\u{1F338}", summer:"\u{1FAE7}", autumn:"\u{1F342}", winter:"❄" };
+    var NAME = { "auto":"自动", spring:"春 · 花瓣", summer:"夏 · 气泡", autumn:"秋 · 落叶", winter:"冬 · 雪花", "off":"关闭" };
+    var mode = load(LS_SEASON, "auto");
+    if(MODES.indexOf(mode) === -1) mode = "auto";
+    var baseR = 150, baseG = 165, baseB = 190;
+
+    function dark(){ return document.documentElement.dataset.theme === "dark"; }
+    function readColor(){
+      var v = getComputedStyle(document.documentElement).getPropertyValue("--fx-rgb");
+      var p = (v || "").split(",");
+      if(p.length === 3){ var r = +p[0], g = +p[1], b = +p[2]; if(r === r && g === g && b === b){ baseR = r; baseG = g; baseB = b; } }
+    }
+    function baseCol(a){ return "rgba(" + baseR + "," + baseG + "," + baseB + "," + a + ")"; }
+    function seasonNow(){
+      var m = new Date().getMonth() + 1;
+      if(m === 12 || m <= 2) return "winter";
+      if(m <= 5) return "spring";
+      if(m <= 8) return "summer";
+      return "autumn";
+    }
+    function cur(){ return mode === "auto" ? seasonNow() : mode; }
+    function pick(arr){ return arr[(Math.random() * arr.length) | 0]; }
+    function dens(){ return Math.max(.5, Math.min(1.3, W / 1280)); }
+    var PET_L = ["247,184,200","250,206,222","243,164,185","240,190,205"];
+    var PET_D = ["233,164,183","242,197,211","219,140,161"];
+    var LEAF_L = ["214,137,45","194,72,45","186,134,20","161,94,45","224,165,88"];
+    var LEAF_D = ["196,124,44","172,72,52","168,124,38","146,90,52"];
+
+    function size(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cvs.clientWidth; H = cvs.clientHeight;
+      cvs.width = Math.round(W * dpr);
+      cvs.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    /* 春 · 花瓣 */
+    var spring = {
+      n: function(){ return Math.round(58 * dens()); },
+      spawn: function(any){ return {
+        x: Math.random() * W, y: any ? Math.random() * H : -14,
+        r: 5 + Math.random() * 7,
+        vy: .5 + Math.random() * .75,
+        sway: .5 + Math.random() * 1.1,
+        ph: Math.random() * 6.283,
+        spin: .008 + Math.random() * .02,
+        tilt: Math.random() * 6.283,
+        flip: (Math.random() >= .5 ? 1 : -1) * (.01 + Math.random() * .025),
+        a: .5 + Math.random() * .4,
+        col: pick(dark() ? PET_D : PET_L)
+      }; },
+      upd: function(f, st){
+        f.ph += f.spin * st; f.tilt += f.flip * st;
+        f.y += f.vy * st;
+        f.x += Math.sin(f.ph * 1.4 + f.y * .012) * f.sway * st;
+        if(f.y > H + 16 || f.x < -24 || f.x > W + 24) f.dead = 1;
+      },
+      drw: function(f){
+        ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.ph);
+        ctx.scale(Math.cos(f.tilt), 1);
+        ctx.globalAlpha = f.a;
+        ctx.fillStyle = "rgb(" + f.col + ")";
+        ctx.beginPath();
+        ctx.moveTo(0, -f.r);
+        ctx.bezierCurveTo(f.r * .85, -f.r * .45, f.r * .72, f.r * .55, 0, f.r);
+        ctx.bezierCurveTo(-f.r * .72, f.r * .55, -f.r * .85, -f.r * .45, 0, -f.r);
+        ctx.fill();
+        ctx.globalAlpha = f.a * .5;
+        ctx.strokeStyle = "rgba(255,255,255,.7)"; ctx.lineWidth = .8;
+        ctx.beginPath(); ctx.moveTo(0, -f.r * .5); ctx.lineTo(0, f.r * .55); ctx.stroke();
+        ctx.restore();
+      }
+    };
+
+    /* 夏 · 白天气泡 / 夜间萤火虫 */
+    var summer = {
+      night: false,
+      n: function(){ return Math.round((this.night ? 46 : 34) * dens()); },
+      spawn: function(any){
+        if(this.night){
+          return {
+            x: Math.random() * W, y: Math.random() * H,
+            r: 1.3 + Math.random() * 1.5,
+            vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .35,
+            ph: Math.random() * 6.283, wob: .4 + Math.random() * .8,
+            a: .5 + Math.random() * .5
+          };
+        }
+        return {
+          x: Math.random() * W, y: any ? Math.random() * H : H + 18,
+          r: 5 + Math.random() * 13,
+          vy: .35 + Math.random() * .8,
+          sway: .3 + Math.random() * .7,
+          ph: Math.random() * 6.283,
+          a: .3 + Math.random() * .35
+        };
+      },
+      upd: function(f, st){
+        f.ph += st * .03;
+        if(this.night){
+          f.x += (f.vx + Math.sin(f.ph * 2) * f.wob * .15) * st;
+          f.y += (f.vy + Math.cos(f.ph * 1.7) * f.wob * .15) * st;
+          if(f.x < -20 || f.x > W + 20 || f.y < -20 || f.y > H + 20) f.dead = 1;
+        } else {
+          f.y -= f.vy * st;
+          f.x += Math.sin(f.ph + f.y * .01) * f.sway * .5 * st;
+          if(f.y < -f.r - 14 || f.x < -24 || f.x > W + 24) f.dead = 1;
+        }
+      },
+      drw: function(f){
+        if(this.night){
+          var g = (Math.sin(f.ph * 3) + 1) / 2; g *= g;
+          ctx.save(); ctx.translate(f.x, f.y);
+          ctx.globalAlpha = f.a * (.15 + .85 * g);
+          var gr = ctx.createRadialGradient(0, 0, 0, 0, 0, f.r * 4.5);
+          gr.addColorStop(0, "rgba(255,216,120,.85)");
+          gr.addColorStop(1, "rgba(255,216,120,0)");
+          ctx.fillStyle = gr;
+          ctx.beginPath(); ctx.arc(0, 0, f.r * 4.5, 0, 6.283); ctx.fill();
+          ctx.fillStyle = "rgba(255,240,180,.95)";
+          ctx.beginPath(); ctx.arc(0, 0, f.r * .9, 0, 6.283); ctx.fill();
+          ctx.restore();
+          return;
+        }
+        ctx.save(); ctx.globalAlpha = f.a;
+        ctx.strokeStyle = baseCol(.75); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.stroke();
+        ctx.fillStyle = baseCol(.08); ctx.fill();
+        ctx.globalAlpha = f.a * .9;
+        ctx.strokeStyle = "rgba(255,255,255,.8)";
+        ctx.beginPath(); ctx.arc(f.x - f.r * .3, f.y - f.r * .32, f.r * .3, 3.4, 5.2); ctx.stroke();
+        ctx.restore();
+      }
+    };
+
+    /* 秋 · 落叶 */
+    var autumn = {
+      n: function(){ return Math.round(46 * dens()); },
+      spawn: function(any){ return {
+        x: Math.random() * W, y: any ? Math.random() * H : -16,
+        r: 6 + Math.random() * 8,
+        vy: .6 + Math.random() * .9,
+        sway: .7 + Math.random() * 1.3,
+        ph: Math.random() * 6.283,
+        spin: .01 + Math.random() * .03,
+        tilt: Math.random() * 6.283,
+        flip: (Math.random() >= .5 ? 1 : -1) * (.02 + Math.random() * .05),
+        a: .55 + Math.random() * .4,
+        col: pick(dark() ? LEAF_D : LEAF_L)
+      }; },
+      upd: function(f, st){
+        f.ph += f.spin * st; f.tilt += f.flip * st;
+        f.y += f.vy * st;
+        f.x += Math.sin(f.ph * 1.2 + f.y * .01) * f.sway * st;
+        if(f.y > H + 18 || f.x < -26 || f.x > W + 26) f.dead = 1;
+      },
+      drw: function(f){
+        ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.ph);
+        ctx.scale(Math.cos(f.tilt), 1);
+        ctx.globalAlpha = f.a;
+        ctx.fillStyle = "rgb(" + f.col + ")";
+        ctx.beginPath();
+        ctx.moveTo(0, -f.r);
+        ctx.bezierCurveTo(f.r * .8, -f.r * .45, f.r * .7, f.r * .5, 0, f.r * .85);
+        ctx.bezierCurveTo(-f.r * .7, f.r * .5, -f.r * .8, -f.r * .45, 0, -f.r);
+        ctx.fill();
+        ctx.globalAlpha = f.a * .7;
+        ctx.strokeStyle = dark() ? "rgba(255,255,255,.3)" : "rgba(70,45,15,.45)";
+        ctx.lineWidth = .8;
+        ctx.beginPath(); ctx.moveTo(0, -f.r * .8); ctx.lineTo(0, f.r * .85); ctx.stroke();
+        ctx.restore();
+      }
+    };
+
+    /* 冬 · 雪花 */
+    var winter = {
+      n: function(){ return Math.round(Math.min(170, Math.max(48, W / 9))); },
+      spawn: function(any){ return {
+        x: Math.random() * W, y: any ? Math.random() * H : -12,
+        r: 1 + Math.random() * 2.8,
+        vy: .28 + Math.random() * .85,
+        drift: .25 + Math.random() * .85,
+        ph: Math.random() * Math.PI * 2,
+        spin: .006 + Math.random() * .02,
+        a: .35 + Math.random() * .55
+      }; },
+      upd: function(f, st){
+        f.ph += f.spin * st;
+        f.y += f.vy * st;
+        f.x += Math.sin(f.ph * .6 + f.y * .01) * f.drift * .5 * st;
+        if(f.y - 8 > H || f.x < -20 || f.x > W + 20) f.dead = 1;
+      },
+      drw: function(f){
+        ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.ph);
+        ctx.globalAlpha = f.a;
+        if(f.r >= 2.1){
+          ctx.strokeStyle = "rgb(" + baseR + "," + baseG + "," + baseB + ")";
+          ctx.lineWidth = Math.max(.7, f.r * .38);
+          ctx.lineCap = "round";
+          var arm = f.r * 1.75;
+          for(var k = 0; k < 3; k++){
+            ctx.rotate(Math.PI / 3);
+            ctx.beginPath();
+            ctx.moveTo(-arm, 0); ctx.lineTo(arm, 0);
+            var tick = arm * .42;
+            for(var s = -1; s <= 1; s += 2){
+              ctx.moveTo(s * arm * .55, 0); ctx.lineTo(s * arm * .55 + tick * .5, tick * .5);
+              ctx.moveTo(s * arm * .55, 0); ctx.lineTo(s * arm * .55 - tick * .5, -tick * .5);
+            }
+            ctx.stroke();
+          }
+        } else {
+          ctx.fillStyle = "rgb(" + baseR + "," + baseG + "," + baseB + ")";
+          ctx.beginPath(); ctx.arc(0, 0, f.r, 0, 6.283); ctx.fill();
+        }
+        ctx.restore();
+      }
+    };
+    var SEASONS = { spring: spring, summer: summer, autumn: autumn, winter: winter };
+
+    function frame(ts){
+      var dt = last ? Math.min(48, ts - last) : 16; last = ts;
+      var st = dt / 16.67;
+      ctx.clearRect(0, 0, W, H);
+      for(var i = 0; i < parts.length; i++){
+        var f = parts[i];
+        S.upd(f, st);
+        if(f.dead){ parts[i] = S.spawn(false); continue; }
+        S.drw(f);
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    function start(){ if(!raf){ last = 0; raf = requestAnimationFrame(frame); } }
+    function stop(){ if(raf){ cancelAnimationFrame(raf); raf = 0; } }
+
+    function build(){
+      S = SEASONS[cur()];
+      summer.night = dark();
+      parts = [];
+      var n = S.n();
+      for(var i = 0; i < n; i++) parts.push(S.spawn(true));
+    }
+    function apply(){
+      readColor();
+      if(mode === "off"){ stop(); parts = []; ctx.clearRect(0, 0, W, H); return; }
+      build(); start();
+    }
+    function syncBtn(){
+      var s = cur();
+      btn.textContent = (mode === "off") ? "\u2298" : ICON[s];
+      btn.title = "季节特效：" + NAME[mode]
+        + (mode === "auto" ? " · 当前 " + NAME[s] : "")
+        + "（点击切换：自动→春→夏→秋→冬→关）";
+    }
+
+    btn.addEventListener("click", function(){
+      mode = MODES[(MODES.indexOf(mode) + 1) % MODES.length];
+      save(LS_SEASON, mode);
+      apply(); syncBtn();
+    });
+    var rt;
+    window.addEventListener("resize", function(){
+      clearTimeout(rt);
+      rt = setTimeout(function(){ size(); if(mode !== "off") build(); }, 180);
+    });
+    document.addEventListener("visibilitychange", function(){
+      if(mode === "off") return;
+      document.hidden ? stop() : start();
+    });
+    window.__fxTheme = function(){ readColor(); if(mode !== "off") build(); };
+
+    size(); apply(); syncBtn();
+  })();
+
+  /* ---------- 友情链接（对应 index.html 底部，可自行添加） ---------- */
+  var LS_FRIENDS = "nav.friends";
+  var FRIENDS = load(LS_FRIENDS, []);
+  function renderFriends(){
+    var el = document.getElementById("flinks");
+    if(!el) return;
+    if(!FRIENDS.length){
+      el.innerHTML = '<span class="none">暂无友情链接，可在脚本 FRIENDS 中添加，格式：[名称, 网址]</span>';
+      return;
+    }
+    el.innerHTML = FRIENDS.map(function(f){
+      return '<a href="' + esc(f[1]) + '" target="_blank" rel="noopener">' + esc(f[0]) + '</a>';
+    }).join("");
+  }
+
+  renderEngines();
+  render();
+  renderFriends();
+})();
+</script>
+</body>
+</html>
